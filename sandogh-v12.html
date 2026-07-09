@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صندوق قرض‌الحسنه خانوادگی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--pri:oklch(42% .12 160);--pri-h:oklch(38% .13 160);--pri-l:oklch(92% .04 160);--sf:oklch(98.5% .005 160);--sfr:oklch(100% .003 160);--t1:oklch(20% .015 160);--t2:oklch(45% .01 160);--t3:oklch(60% .008 160);--bd:oklch(90% .01 160);--ok:oklch(55% .15 145);--ok-bg:oklch(93% .04 145);--wn:oklch(55% .12 60);--wn-bg:oklch(93% .04 60);--er:oklch(50% .15 25);--er-bg:oklch(93% .04 25);--r:12px;--eo:cubic-bezier(.22,1,.36,1)}
+body{font-family:'Vazirmatn',system-ui,sans-serif;background:var(--sf);color:var(--t1);line-height:1.7;min-height:100vh;font-feature-settings:'tnum'}
+.ld{position:fixed;inset:0;background:var(--sf);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999}.ld.h{display:none}
+.sp{width:40px;height:40px;border:3px solid var(--bd);border-top-color:var(--pri);border-radius:50%;animation:s .8s linear infinite;margin-bottom:16px}
+@keyframes s{to{transform:rotate(360deg)}}.lt{font-size:.85rem;color:var(--t3)}
+.eb{background:var(--er-bg);color:var(--er);padding:16px 24px;border-radius:8px;font-size:.85rem;max-width:400px;text-align:center;line-height:2}
+.lp{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;background:linear-gradient(145deg,oklch(95% .03 160),oklch(98% .005 160))}
+.lc{background:var(--sfr);border:1px solid var(--bd);border-radius:16px;padding:48px 40px;width:100%;max-width:380px;box-shadow:0 8px 32px oklch(20% .02 160/.06)}
+.ll{text-align:center;margin-bottom:32px}.lli{width:56px;height:56px;background:var(--pri);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px}
+.lli svg{width:28px;height:28px;fill:white}.ll h2{font-size:1.1rem;font-weight:600}.ll p{font-size:.8rem;color:var(--t3);margin-top:4px}
+.fg{margin-bottom:20px}.fl{display:block;font-size:.8rem;font-weight:500;color:var(--t2);margin-bottom:6px}
+.fi{width:100%;padding:12px 16px;border:1px solid var(--bd);border-radius:8px;font-family:inherit;font-size:.9rem;background:var(--sf);transition:border-color .2s;direction:ltr;text-align:right}
+.fi:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px oklch(42% .12 160/.1)}
+.rr{display:flex;align-items:center;gap:8px;margin-bottom:20px;cursor:pointer}.rr input{width:16px;height:16px;accent-color:var(--pri);cursor:pointer}.rr label{font-size:.8rem;color:var(--t2);cursor:pointer}
+.lb{width:100%;padding:12px;background:var(--pri);color:white;border:none;border-radius:8px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .2s}.lb:hover{background:var(--pri-h)}
+.le{background:var(--er-bg);color:var(--er);font-size:.78rem;padding:8px 12px;border-radius:6px;margin-bottom:16px;display:none}
+.ig-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--bd);text-decoration:none;color:var(--t2);font-size:.8rem;transition:color .2s}
+.ig-link:hover{color:var(--pri)}
+.ig-link svg{width:20px;height:20px}
+.app{display:none}.hd{background:var(--pri);color:oklch(97% .005 160);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.hd h1{font-size:1rem;font-weight:600}.ha{display:flex;align-items:center;gap:12px}.hu{font-size:.82rem;opacity:.9}
+.bo{padding:6px 14px;background:oklch(50% .08 160);color:white;border:none;border-radius:6px;font-family:inherit;font-size:.75rem;cursor:pointer}.bo:hover{background:oklch(55% .06 160)}
+.mn{max-width:1100px;margin:0 auto;padding:28px 24px 64px}
+.bb{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--sfr);border:1px solid var(--bd);border-radius:8px;font-family:inherit;font-size:.8rem;color:var(--t2);cursor:pointer;margin-bottom:24px;transition:all .2s}.bb:hover{border-color:var(--pri);color:var(--pri)}
+.gt{background:var(--pri-l);border:1px solid oklch(80% .06 160);border-radius:var(--r);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:28px}
+.gi{text-align:center}.gl{font-size:.72rem;color:var(--t2);margin-bottom:2px}.gv{font-size:1.05rem;font-weight:700;color:var(--pri)}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:32px}
+.mc{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:20px 24px;cursor:pointer;transition:all .25s var(--eo)}
+.mc:hover{transform:translateY(-2px);border-color:var(--pri);box-shadow:0 4px 16px oklch(42% .12 160/.08)}
+.mh{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ma{width:42px;height:42px;border-radius:50%;background:var(--pri-l);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.85rem;color:var(--pri)}
+.mna{font-weight:600;font-size:.9rem}.mr{font-size:.7rem;color:var(--t3)}
+.ms{display:grid;grid-template-columns:1fr 1fr;gap:10px}.msl{font-size:.68rem;color:var(--t3);margin-bottom:1px}.msv{font-size:.88rem;font-weight:600}
+.msv.p{color:var(--ok)}.msv.n{color:var(--er)}.msv.z{color:var(--t3)}.msv.w{color:var(--wn)}
+.dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}.dn{font-size:1.1rem;font-weight:700}
+.su{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:32px}
+.si{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:14px 18px}.si.hl{background:var(--pri-l);border-color:oklch(80% .06 160)}
+.sl{font-size:.72rem;color:var(--t3);margin-bottom:3px;font-weight:500}.sv{font-size:1.1rem;font-weight:700}.sv.p{color:var(--ok)}.sv.w{color:var(--wn)}.sv.er{color:var(--er)}
+.sc{margin-bottom:32px}.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}.st{font-size:.95rem;font-weight:600}
+.tw{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:400px}thead{background:oklch(96% .008 160)}
+th{padding:11px 14px;font-weight:500;color:var(--t2);text-align:right;font-size:.74rem;border-bottom:1px solid var(--bd);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid oklch(94% .005 160)}tr:last-child td{border-bottom:none}tr:hover td{background:oklch(97% .005 160)}
+.ad{color:var(--er);font-weight:500}.ac{color:var(--ok);font-weight:500}
+.sb{display:inline-block;font-size:.68rem;font-weight:500;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.sp2{background:var(--ok-bg);color:var(--ok)}.spe{background:var(--er-bg);color:var(--er)}.su2{background:oklch(94% .005 160);color:var(--t3)}
+.lp2{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:20px;margin-bottom:28px}
+.li{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px}.lti{font-weight:600;font-size:.9rem}.ld2{font-size:.78rem;color:var(--t2)}
+.pb{height:7px;background:oklch(92% .01 160);border-radius:4px;overflow:hidden;margin-bottom:8px}.pf{height:100%;background:var(--pri);border-radius:4px}
+.pl{display:flex;justify-content:space-between;font-size:.72rem;color:var(--t3)}
+.bx{background:var(--pri-l);border:1px solid oklch(80% .06 160);border-radius:8px;padding:14px 20px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.bxl{font-size:.82rem;font-weight:500;color:var(--t2)}.bxv{font-size:1.1rem;font-weight:700}
+.bank{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:20px;margin-bottom:20px}
+.bank-title{font-size:.88rem;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.bank-title svg{width:18px;height:18px;color:var(--pri)}
+.bank-rows{display:grid;gap:8px}
+.bank-row{display:flex;align-items:center;padding:10px 14px;background:var(--sf);border-radius:8px;gap:12px}
+.bank-label{font-size:.72rem;color:var(--t3);white-space:nowrap;min-width:80px}
+.bank-val{font-size:.85rem;font-weight:500;direction:ltr}
+.fn{text-align:center;font-size:.72rem;color:var(--t3);margin-top:40px;padding-top:20px;border-top:1px solid var(--bd)}
+.fn a{color:var(--t2);text-decoration:none}.fn a:hover{color:var(--pri)}
+@media(max-width:640px){.hd{padding:14px 20px;flex-wrap:wrap;gap:8px}.mn{padding:20px 16px 48px}.su{grid-template-columns:1fr 1fr;gap:10px}.mg{grid-template-columns:1fr}.gt{flex-direction:column;align-items:flex-start;gap:12px}th,td{padding:9px 10px;font-size:.74rem}.lc{padding:36px 28px}}
+</style>
+</head>
+<body>
+<div class="ld" id="lo"><div class="sp"></div><div class="lt">در حال بارگذاری اطلاعات صندوق...</div></div>
+<div class="lp" id="lp">
+<div class="lc">
+<div class="ll"><div class="lli"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+<h2>صندوق قرض‌الحسنه خانوادگی</h2><p>ورود اعضا</p></div>
+<div class="le" id="le">شماره موبایل یا رمز عبور اشتباه است<br><small>توجه: اعداد را به صورت انگلیسی وارد کنید</small></div>
+<div class="fg"><label class="fl">شماره موبایل</label><input type="tel" class="fi" id="ph" placeholder="09121234567" maxlength="11"></div>
+<div class="fg"><label class="fl">رمز عبور</label><input type="password" class="fi" id="pw" placeholder="****"></div>
+<div class="rr"><input type="checkbox" id="rm" checked><label for="rm">مرا به خاطر بسپار</label></div>
+<button class="lb" onclick="login()">ورود به حساب</button>
+<a class="ig-link" href="https://instagram.com/omid.fard.sw" target="_blank">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+@omid.fard.sw
+</a>
+</div></div>
+<div class="app" id="app">
+<header class="hd"><h1>صندوق قرض‌الحسنه خانوادگی</h1><div class="ha"><span class="hu" id="hun"></span><button class="bo" onclick="logout()">خروج</button></div></header>
+<main class="mn" id="mc"></main>
+</div>
+<script>
+const SID='1E8OVNRGvyKmyDBnghSjaIMGS6m0K-NtIqrL9KEB1kTM';
+let D={members:[],ledger:[],loans:[],payments:[]},U=null;
+
+function cellVal(cell){
+if(!cell) return '';
+// Use formatted value (f) if available, otherwise raw value (v)
+if(cell.f) return cell.f;
+if(cell.v===null||cell.v===undefined) return '';
+return cell.v;
+}
+
+function loadSheet(n,cb){
+const cn='cb_'+n+'_'+Date.now();
+const url=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=responseHandler:${cn}&sheet=${n}`;
+window[cn]=function(r){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);
+if(r.status==='error'){cb(null,r.errors);return}
+const t=r.table,h=t.cols.map(c=>c.label||c.id);
+const rows=t.rows.map(row=>{const o={};row.c.forEach((c,i)=>{if(h[i])o[h[i]]=cellVal(c);});return o;});cb(rows);};
+const sc=document.createElement('script');sc.src=url;
+sc.onerror=function(){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);cb(null,'err');};
+document.body.appendChild(sc);}
+
+function loadAll(){
+const sheets=['members','ledger','loans','payments'];let done=0,err=false;
+sheets.forEach(s=>{loadSheet(s,(rows,e)=>{if(err)return;
+if(e){err=true;document.getElementById('lo').innerHTML='<div class="eb"><p>خطا در بارگذاری "'+s+'"</p><p style="margin-top:8px;font-size:.75rem">مطمئن شوید شیت دسترسی عمومی دارد</p></div>';return;}
+D[s]=rows;done++;if(done===4){norm();document.getElementById('lo').classList.add('h');autoLogin();}});});}
+
+function norm(){
+D.members.forEach(r=>{r.member_id=Number(r.member_id)||0;r.name=String(r.name||'').trim();r.phone=String(r.phone||'').trim();r.password=String(r.password||'').trim();r.group_id=String(r.group_id||'').trim();r.role=String(r.role||'').trim().toLowerCase();});
+D.ledger.forEach(r=>{r.member_id=Number(r.member_id)||0;r.date=String(r.date||'').trim();r.description=String(r.description||'').trim();r.debit=Number(r.debit)||0;r.credit=Number(r.credit)||0;});
+D.loans.forEach(r=>{r.member_id=Number(r.member_id)||0;r.loan_id=String(r.loan_id||'').trim();r.savings=Number(r['Savings balance'])||0;r.outstanding=Number(r['Outstanding loan balance'])||0;r.amount=Number(r.amount)||0;r.installments=Number(r.installments)||0;r.start_date=String(r.start_date||'').trim();});
+D.payments.forEach(r=>{r.loan_id=String(r.loan_id||'').trim();r.nam=String(r.nam||'').trim();r.installment_no=Number(r.installment_no)||0;r.amount=Number(r.amount)||0;r.due_date=String(r.due_date||'').trim();r.amount_paid=Number(r['amount paid'])||0;r.paid_date=String(r.paid_date||'').trim();});}
+
+function fmt(n){if(n===0)return'۰';return(n<0?'-':'')+Math.abs(n).toLocaleString('fa-IR');}
+function grp(gid){return D.members.filter(m=>m.group_id===gid);}
+function ini(n){const p=n.split(' ');return p.length>1?p[0][0]+p[1][0]:p[0][0];}
+function getLoan(mid){return D.loans.find(l=>l.member_id===mid)||null;}
+function getPay(lid){return D.payments.filter(p=>p.loan_id===lid);}
+function getOverdue(lid){return getPay(lid).filter(p=>p.amount_paid===0&&p.due_date<='1405/04/18');}
+function getMemberStats(mid){
+const loan=getLoan(mid);if(!loan||!loan.loan_id)return{overdue:0,overdueAmt:0,installAmt:0,saving10:0,totalDue:0};
+const od=getOverdue(loan.loan_id);
+const installAmt=Math.round(loan.amount/loan.installments);
+const saving10=Math.round(installAmt*0.1);
+return{overdue:od.length,overdueAmt:od.reduce((s,p)=>s+p.amount,0),installAmt,saving10,totalDue:installAmt+saving10};}
+
+function autoLogin(){try{const p=localStorage.getItem('sf_p'),w=localStorage.getItem('sf_w'),r=localStorage.getItem('sf_r');
+if(r==='1'&&p&&w){const u=D.members.find(m=>m.phone===p&&m.password===w);if(u){U=u;showApp();return;}}}catch(e){}showLogin();}
+
+function showLogin(){document.getElementById('lp').style.display='flex';
+try{const p=localStorage.getItem('sf_p'),w=localStorage.getItem('sf_w'),r=localStorage.getItem('sf_r');
+if(r==='1'&&p){document.getElementById('ph').value=p;if(w)document.getElementById('pw').value=w;document.getElementById('rm').checked=true;}}catch(e){}}
+
+function showApp(){document.getElementById('lp').style.display='none';document.getElementById('app').style.display='block';
+document.getElementById('hun').textContent=U.name+(U.role==='leader'?' (سرگروه)':'');showOverview();}
+
+function login(){const p=document.getElementById('ph').value.trim(),w=document.getElementById('pw').value.trim(),r=document.getElementById('rm').checked;
+const u=D.members.find(m=>m.phone===p&&m.password===w);
+if(!u){document.getElementById('le').style.display='block';return;}
+document.getElementById('le').style.display='none';
+try{if(r){localStorage.setItem('sf_p',p);localStorage.setItem('sf_w',w);localStorage.setItem('sf_r','1');}
+else{localStorage.removeItem('sf_p');localStorage.removeItem('sf_w');localStorage.removeItem('sf_r');}}catch(e){}
+U=u;showApp();}
+
+function logout(){U=null;document.getElementById('app').style.display='none';document.getElementById('lp').style.display='flex';document.getElementById('le').style.display='none';}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('lp').style.display==='flex')login();});
+
+function bankHtml(){return `<div class="bank"><div class="bank-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>اطلاعات حساب بانکی (بانک صادرات)</div>
+<div class="bank-rows">
+<div class="bank-row"><span class="bank-label">صاحب حساب:</span><span class="bank-val">امید پاکت چیان فرد</span></div>
+<div class="bank-row"><span class="bank-label">شماره کارت:</span><span class="bank-val">6037-6915-5311-2053</span></div>
+<div class="bank-row"><span class="bank-label">شماره شبا:</span><span class="bank-val">IR300190000000214371588006</span></div>
+<div class="bank-row"><span class="bank-label">شماره حساب:</span><span class="bank-val">0214371588006</span></div>
+</div></div>`;}
+
+function footerHtml(){return '<p class="fn">طراحی و توسعه: <a href="https://instagram.com/omid.fard.sw" target="_blank">امید پاکت چیان فرد</a> · ۱۴۰۵</p>';}
+
+function showOverview(){
+const gm=U.role==='leader'?grp(U.group_id):[U];
+if(U.role!=='leader'||gm.length===1){showDetail(U.member_id);return;}
+const ts=gm.reduce((s,m)=>{const l=getLoan(m.member_id);return s+(l?l.savings:0);},0);
+const td=gm.reduce((s,m)=>{const l=getLoan(m.member_id);return s+(l?l.outstanding:0);},0);
+const tOd=gm.reduce((s,m)=>s+getMemberStats(m.member_id).overdue,0);
+const tOdAmt=gm.reduce((s,m)=>s+getMemberStats(m.member_id).overdueAmt,0);
+const tTotal=gm.reduce((s,m)=>s+getMemberStats(m.member_id).totalDue,0);
+
+let h=`<div class="gt">
+<div class="gi"><div class="gl">اعضای گروه</div><div class="gv">${gm.length.toLocaleString('fa-IR')} نفر</div></div>
+<div class="gi"><div class="gl">مجموع پس‌انداز</div><div class="gv">${fmt(ts)} ریال</div></div>
+<div class="gi"><div class="gl">مجموع بدهی وام</div><div class="gv" style="color:var(--er)">${fmt(td)} ریال</div></div>
+<div class="gi"><div class="gl">اقساط معوق</div><div class="gv" style="color:var(--er)">${tOd.toLocaleString('fa-IR')} قسط (${fmt(tOdAmt)} ریال)</div></div>
+<div class="gi"><div class="gl">جمع واریزی ماهانه (قسط + ۱۰٪)</div><div class="gv">${fmt(tTotal)} ریال</div></div>
+</div>`;
+h+='<div class="mg">';
+gm.forEach(m=>{const l=getLoan(m.member_id);const sv=l?l.savings:0;const ob=l?l.outstanding:0;
+const st=getMemberStats(m.member_id);
+h+=`<div class="mc" onclick="showDetail(${m.member_id})"><div class="mh"><div class="ma">${ini(m.name)}</div><div><div class="mna">${m.name}</div><div class="mr">${m.role==='leader'?'سرگروه':'عضو'}</div></div></div>
+<div class="ms">
+<div><div class="msl">مانده حساب</div><div class="msv p">${fmt(sv)}</div></div>
+<div><div class="msl">مانده بدهی وام</div><div class="msv ${ob>0?'n':'z'}">${fmt(ob)}</div></div>
+<div><div class="msl">اقساط معوق</div><div class="msv ${st.overdue>0?'n':'z'}">${st.overdue>0?st.overdue.toLocaleString('fa-IR')+' قسط':'—'}</div></div>
+<div><div class="msl">واریزی ماهانه</div><div class="msv w">${fmt(st.totalDue)}</div></div>
+</div></div>`;});
+h+='</div>';
+h+=bankHtml();
+h+=footerHtml();
+document.getElementById('mc').innerHTML=h;}
+
+function showDetail(mid){
+const m=D.members.find(x=>x.member_id===mid);
+const ml=D.ledger.filter(r=>r.member_id===mid);
+const loan=getLoan(mid);
+const sv=loan?loan.savings:0;const ob=loan?loan.outstanding:0;
+const st=getMemberStats(mid);
+const back=U.role==='leader'&&grp(U.group_id).length>1;
+let h='';
+if(back)h+=`<button class="bb" onclick="showOverview()">← بازگشت</button>`;
+h+=`<div class="dh"><div class="dn">${m.name}</div></div>
+<div class="su">
+<div class="si hl"><div class="sl">مانده حساب پس‌انداز</div><div class="sv p">${fmt(sv)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
+<div class="si"><div class="sl">مانده بدهی وام</div><div class="sv w">${fmt(ob)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
+<div class="si"><div class="sl">اقساط معوق</div><div class="sv er">${st.overdue>0?st.overdue.toLocaleString('fa-IR')+' قسط ('+fmt(st.overdueAmt)+')':'—'}</div></div>
+<div class="si"><div class="sl">مبلغ قسط</div><div class="sv">${fmt(st.installAmt)}</div></div>
+<div class="si"><div class="sl">پس‌انداز اجباری (۱۰٪)</div><div class="sv">${fmt(st.saving10)}</div></div>
+<div class="si"><div class="sl">جمع واریزی ماهانه</div><div class="sv w">${fmt(st.totalDue)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
+</div>`;
+
+if(loan&&loan.loan_id){
+const pays=getPay(loan.loan_id);
+const paidC=pays.filter(p=>p.amount_paid>0).length;
+const rem=loan.installments-paidC;
+const pct=loan.installments>0?(paidC/loan.installments*100).toFixed(0):0;
+h+=`<div class="lp2"><div class="li"><span class="lti">وام ${fmt(loan.amount)} ریال (${loan.installments.toLocaleString('fa-IR')} قسط)</span>
+<span class="ld2">شروع: ${loan.start_date}</span></div>
+<div class="pb"><div class="pf" style="width:${pct}%"></div></div>
+<div class="pl"><span>${paidC.toLocaleString('fa-IR')} قسط پرداخت شده</span><span>${rem.toLocaleString('fa-IR')} قسط باقیمانده</span></div></div>
+<section class="sc"><div class="sh"><h2 class="st">اقساط وام</h2></div>
+<div class="tw"><table><thead><tr><th>قسط</th><th>مبلغ</th><th>سررسید</th><th>تاریخ پرداخت</th><th>وضعیت</th></tr></thead><tbody>`;
+pays.forEach(p=>{
+const paid=p.amount_paid>0;const overdue=!paid&&p.due_date<='1405/04/18';
+const cls=paid?'sp2':overdue?'spe':'su2';const txt=paid?'پرداخت شده':overdue?'معوق':'آینده';
+h+=`<tr><td>${p.installment_no.toLocaleString('fa-IR')}</td><td>${fmt(p.amount)}</td><td>${p.due_date}</td>
+<td>${p.paid_date||'—'}</td><td><span class="sb ${cls}">${txt}</span></td></tr>`;});
+h+=`</tbody></table></div></section>`;}
+
+if(ml.length>0){
+h+=`<section class="sc"><div class="sh"><h2 class="st">صورتحساب</h2></div>
+<div class="tw"><table><thead><tr><th>ردیف</th><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>`;
+ml.forEach((r,i)=>{h+=`<tr><td>${(i+1).toLocaleString('fa-IR')}</td><td>${r.date}</td><td>${r.description}</td>
+<td class="ad">${r.debit>0?fmt(r.debit):'—'}</td><td class="ac">${r.credit>0?fmt(r.credit):'—'}</td></tr>`;});
+h+=`</tbody></table>
+<div class="bx"><span class="bxl">مانده صورتحساب:</span><span class="bxv" style="color:var(--ok)">${fmt(sv)} ریال</span></div></div></section>`;}
+
+h+=footerHtml();
+document.getElementById('mc').innerHTML=h;}
+
+loadAll();
+</script>
+</body>
+</html>
