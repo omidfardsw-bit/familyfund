@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<style>
+.design-ui-credit{position:fixed;bottom:12px;right:12px;font:11px/1 system-ui,sans-serif;color:rgba(128,128,128,0.5);pointer-events:none;z-index:2147483647;transition:opacity 0.4s ease;user-select:none;letter-spacing:0.02em}
+@media(hover:none){.design-ui-credit{display:none}}
+@media print{*{transition:none!important;animation:none!important;box-shadow:none!important}body{print-color-adjust:exact;-webkit-print-color-adjust:exact}.design-ui-credit{display:none!important}}
+</style>
+<script>
+(function(){function markEditable(){document.body.classList.add('artifact-editable')}function initChromeUI(){if(!matchMedia('(hover: hover)').matches)return;var credit=document.createElement('div');credit.className='design-ui-credit';credit.setAttribute('aria-hidden','true');credit.innerHTML='\u{1F49C} by ClickUp Brain';document.body.appendChild(credit);var timer=null;var fade=function(out){credit.style.opacity=out?'0':''};fade(true);var show=function(){fade(false);clearTimeout(timer);timer=setTimeout(function(){fade(true)},3000)};document.addEventListener('mousemove',show);show()}function init(){markEditable();initChromeUI()}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init)}else{init()}})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صندوق قرض‌الحسنه خانوادگی</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --pri:#15803d;--pri-h:#166534;--pri-l:#f0fdf4;--pri-border:#bbf7d0;
+  --sf:#f5f8f5;--sfr:#ffffff;
+  --t1:#141e1a;--t2:#4a5c52;--t3:#8c9b91;
+  --bd:#dde5de;
+  --ok:#16a34a;--ok-bg:#dcfce7;
+  --wn:#b45309;--wn-bg:#fff7ed;
+  --er:#b91c1c;--er-bg:#fee2e2;
+  --r:14px;--eo:cubic-bezier(.22,1,.36,1)
+}
+body{font-family:'Vazirmatn',system-ui,sans-serif;background:var(--sf);color:var(--t1);line-height:1.7;min-height:100vh;font-feature-settings:'tnum'}
+
+/* ===== LOADER ===== */
+.ld{position:fixed;inset:0;background:var(--sf);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s,visibility .4s}.ld.h{opacity:0;visibility:hidden;pointer-events:none}
+.sp{width:40px;height:40px;border:3px solid var(--bd);border-top-color:var(--pri);border-radius:50%;animation:s .8s linear infinite;margin-bottom:16px}
+@keyframes s{to{transform:rotate(360deg)}}
+.lt{font-size:.85rem;color:var(--t3)}
+.eb{background:var(--er-bg);color:var(--er);padding:16px 24px;border-radius:12px;font-size:.85rem;max-width:400px;text-align:center;line-height:2;border:1px solid #fecaca}
+
+/* ===== LOGIN ===== */
+.lp{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px;background:linear-gradient(150deg,#e8f5ec,#f0f7f2,#f8fbf9)}
+.lc{background:var(--sfr);border:1px solid var(--bd);border-radius:20px;padding:48px 40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.06);position:relative;animation:slideUp .6s var(--eo) both}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.ll{text-align:center;margin-bottom:32px}.lli{width:58px;height:58px;background:linear-gradient(135deg,var(--pri),#16a34a);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 8px 24px rgba(21,128,61,0.2)}
+.lli svg{width:28px;height:28px;fill:white}.ll h2{font-size:1.15rem;font-weight:700;letter-spacing:-.01em}.ll p{font-size:.82rem;color:var(--t3);margin-top:5px}
+.fg{margin-bottom:20px}.fl{display:block;font-size:.8rem;font-weight:500;color:var(--t2);margin-bottom:7px}
+.fi{width:100%;padding:12px 16px;border:1.5px solid var(--bd);border-radius:10px;font-family:inherit;font-size:.9rem;background:#fff;transition:all .25s var(--eo);direction:ltr;text-align:right}
+.fi:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(21,128,61,0.08)}
+.rr{display:flex;align-items:center;gap:8px;margin-bottom:20px;cursor:pointer}.rr input{width:16px;height:16px;accent-color:var(--pri);cursor:pointer}.rr label{font-size:.8rem;color:var(--t2);cursor:pointer}
+.lb{width:100%;padding:13px;background:linear-gradient(135deg,var(--pri),#16a34a);color:white;border:none;border-radius:10px;font-family:inherit;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .25s var(--eo);box-shadow:0 2px 10px rgba(21,128,61,0.2)}.lb:hover{box-shadow:0 6px 20px rgba(21,128,61,0.28);transform:translateY(-1px)}.lb:active{transform:translateY(0)}
+.le{background:var(--er-bg);color:var(--er);font-size:.78rem;padding:10px 14px;border-radius:8px;margin-bottom:16px;display:none;border:1px solid #fecaca;line-height:2}
+.ig-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;padding-top:18px;border-top:1px solid var(--bd);text-decoration:none;color:var(--t3);font-size:.8rem;transition:color .2s}.ig-link:hover{color:var(--pri)}.ig-link svg{width:18px;height:18px}
+.rb-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;text-decoration:none;color:var(--t2);font-size:.8rem;transition:color .2s}.rb-link:hover{color:var(--pri)}.rb-link svg{width:18px;height:18px}
+
+/* ===== APP ===== */
+.app{display:none}
+.hd{background:var(--sfr);color:var(--t1);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--bd);box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+.hd h1{font-size:.95rem;font-weight:600;display:flex;align-items:center;gap:9px;letter-spacing:-.01em}
+.hd h1::before{content:'';width:8px;height:8px;background:var(--pri);border-radius:50%;box-shadow:0 0 8px rgba(21,128,61,0.4)}
+.ha{display:flex;align-items:center;gap:12px}.hu{font-size:.82rem;color:var(--t2);background:var(--pri-l);padding:5px 14px;border-radius:20px;border:1px solid var(--pri-border)}
+.bo{padding:7px 15px;background:var(--er-bg);color:var(--er);border:1px solid #fecaca;border-radius:9px;font-family:inherit;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .2s}.bo:hover{background:#fee2e2;transform:translateY(-1px)}
+.mn{max-width:1100px;margin:0 auto;padding:28px 24px 64px}
+
+/* Back Button */
+.bb{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:var(--sfr);border:1px solid var(--bd);border-radius:10px;font-family:inherit;font-size:.82rem;color:var(--t2);cursor:pointer;margin-bottom:24px;transition:all .25s var(--eo)}.bb:hover{border-color:var(--pri);color:var(--pri);transform:translateX(3px)}
+
+/* Summary Bar */
+.gt{background:linear-gradient(135deg,var(--pri-l),#ecfdf5);border:1px solid var(--pri-border);border-radius:var(--r);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:28px}
+.gi{text-align:center}.gl{font-size:.72rem;color:var(--t2);margin-bottom:3px}.gv{font-size:1.05rem;font-weight:700;color:var(--pri)}
+
+/* Member Cards */
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:32px}
+.mc{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:20px 24px;cursor:pointer;transition:all .3s var(--eo);box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+.mc:hover{transform:translateY(-3px);border-color:var(--pri-border);box-shadow:0 8px 24px rgba(21,128,61,0.07)}
+.mh{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.ma{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--pri-l),#dcfce7);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.88rem;color:var(--pri);border:1px solid var(--pri-border)}
+.mna{font-weight:600;font-size:.92rem}.mr{font-size:.72rem;color:var(--t3);margin-top:1px}
+.ms{display:grid;grid-template-columns:1fr 1fr;gap:10px}.msl{font-size:.68rem;color:var(--t3);margin-bottom:1px}.msv{font-size:.88rem;font-weight:600}
+.msv.p{color:var(--ok)}.msv.n{color:var(--er)}.msv.z{color:var(--t3)}.msv.w{color:var(--wn)}
+
+/* Detail */
+.dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}.dn{font-size:1.15rem;font-weight:800;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.dn::before{content:'';width:4px;height:24px;background:linear-gradient(to bottom,var(--pri),#16a34a);border-radius:2px}
+
+/* Stat Tiles */
+.su{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:32px}
+.si{background:var(--sfr);border:1px solid var(--bd);border-radius:12px;padding:14px 18px;transition:all .25s var(--eo);box-shadow:0 1px 2px rgba(0,0,0,0.02)}.si:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.04)}
+.si.hl{background:var(--pri-l);border-color:var(--pri-border)}
+.sl{font-size:.72rem;color:var(--t3);margin-bottom:3px;font-weight:500}.sv{font-size:1.1rem;font-weight:700;line-height:1.5}.sv.p{color:var(--ok)}.sv.w{color:var(--wn)}.sv.er{color:var(--er)}
+.sv small{display:inline-block;margin-top:3px}
+
+/* Tables */
+.sc{margin-bottom:32px}.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}.st{font-size:.95rem;font-weight:700}
+.tw{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:400px}thead{background:var(--pri-l)}
+th{padding:12px 14px;font-weight:500;color:var(--t2);text-align:right;font-size:.74rem;border-bottom:1.5px solid var(--pri-border);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bottom:none}tr:hover td{background:#f8fbf9}
+.ad{color:var(--er);font-weight:500}.ac{color:var(--ok);font-weight:500}
+.sb{display:inline-block;font-size:.68rem;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.sp2{background:var(--ok-bg);color:var(--ok);border:1px solid #bbf7d0}.spe{background:var(--er-bg);color:var(--er);border:1px solid #fecaca}.su2{background:#f1f5f1;color:var(--t3);border:1px solid var(--bd)}
+
+/* Progress */
+.lp2{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:20px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+.li{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:8px}.lti{font-weight:700;font-size:.9rem}.ld2{font-size:.78rem;color:var(--t2)}
+.pb{height:8px;background:#ecf0ec;border-radius:6px;overflow:hidden;margin-bottom:8px}.pf{height:100%;background:linear-gradient(90deg,var(--pri),#16a34a);border-radius:6px;transition:width .8s var(--eo);position:relative}
+.pf::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,rgba(255,255,255,0.25) 50%,transparent 70%);animation:shimmer 2.2s ease-in-out infinite}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.pl{display:flex;justify-content:space-between;font-size:.72rem;color:var(--t3)}
+.bx{background:var(--pri-l);border:1px solid var(--pri-border);border-radius:10px;padding:14px 20px;margin-top:12px;display:flex;justify-content:space-between;align-items:center}
+.bxl{font-size:.82rem;font-weight:500;color:var(--t2)}.bxv{font-size:1.1rem;font-weight:700;color:var(--pri)}
+
+/* Bank */
+.bank{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+.bank-title{font-size:.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.bank-title svg{width:18px;height:18px;color:var(--pri)}
+.bank-rows{display:grid;gap:8px}
+.bank-row{display:flex;align-items:center;padding:11px 14px;background:var(--sf);border-radius:10px;gap:12px;border:1px solid transparent;transition:all .2s}.bank-row:hover{border-color:var(--pri-border);background:var(--pri-l)}
+.bank-label{font-size:.72rem;color:var(--t3);white-space:nowrap;min-width:80px}
+.bank-val{font-size:.85rem;font-weight:500;direction:ltr}
+.cp-btn{background:none;border:none;cursor:pointer;color:var(--pri);display:flex;align-items:center;justify-content:center;padding:4px;border-radius:6px;transition:all 0.2s;margin-left:auto}.cp-btn:hover{background:var(--pri-l)}.cp-btn svg{width:16px;height:16px}
+
+/* Footer */
+.fn{text-align:center;font-size:.72rem;color:var(--t3);margin-top:40px;padding-top:20px;border-top:1px solid var(--bd)}
+.fn-social{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px}
+.fn-social a{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;transition:all .25s var(--eo);opacity:.85;border:1px solid var(--bd)}
+.fn-social a:hover{transform:translateY(-2px);opacity:1;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.fn-social svg{width:16px;height:16px}
+.fn-rb{background:#e6f7f5;color:#00c2af;border-color:#b2e8e0}.fn-tg{background:#e8f4fd;color:#26A5E4;border-color:#b6dcf4}.fn-wa{background:#e8faf0;color:#25D366;border-color:#b5f0cd}
+.fn-social a svg{fill:currentColor}
+.fn a{color:var(--t2);text-decoration:none}.fn a:hover{color:var(--pri)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:none;align-items:center;justify-content:center;z-index:10000;padding:24px;backdrop-filter:blur(4px)}
+.modal-box{background:var(--sfr);border-radius:20px;padding:34px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,0.1);text-align:center;border:1px solid var(--bd);animation:modalIn .35s var(--eo) both}
+@keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-icon{width:50px;height:50px;background:var(--pri-l);color:var(--pri);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid var(--pri-border)}
+.modal-icon svg{width:24px;height:24px}
+.modal-title{font-size:1.1rem;font-weight:700;margin-bottom:12px;color:var(--t1)}
+.update-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--pri);color:#fff;padding:11px 22px;border-radius:12px;font-size:.82rem;font-weight:500;box-shadow:0 10px 30px rgba(21,128,61,0.25);opacity:0;visibility:hidden;transition:all .35s var(--eo);z-index:6000;display:flex;align-items:center;gap:8px;max-width:90vw;text-align:center}
+.update-toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.update-toast svg{width:16px;height:16px;flex-shrink:0}
+.modal-text{font-size:.88rem;color:var(--t2);margin-bottom:20px;line-height:1.8;background:var(--sf);padding:12px 16px;border-radius:10px;border:1px solid var(--bd);text-align:right}
+.modal-alert{background:var(--er-bg);color:var(--er);padding:14px;border-radius:10px;font-size:.84rem;margin-bottom:22px;font-weight:500;border:1px solid #fecaca;display:none;line-height:2;text-align:right}
+.modal-alert svg{width:17px;height:17px;vertical-align:bottom;margin-left:5px}
+.modal-notice{background:var(--pri-l);color:var(--pri-h);padding:14px;border-radius:10px;font-size:.84rem;margin-bottom:22px;font-weight:500;border:1px solid var(--pri-border);display:none;line-height:2;text-align:right}
+.modal-notice svg{width:17px;height:17px;vertical-align:bottom;margin-left:5px}
+.modal-btn{background:linear-gradient(135deg,var(--pri),#16a34a);color:white;border:none;padding:13px 24px;border-radius:10px;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;width:100%;transition:all .25s var(--eo);box-shadow:0 2px 10px rgba(21,128,61,0.2)}.modal-btn:hover{box-shadow:0 6px 20px rgba(21,128,61,0.28);transform:translateY(-1px)}
+
+/* Responsive */
+@media(max-width:640px){
+  .hd{flex-wrap:wrap;height:auto;min-height:56px;padding:12px 16px;gap:10px;align-items:flex-start}
+  .hd h1{width:100%;font-size:.85rem}
+  .ha{width:100%;flex-wrap:wrap;justify-content:flex-start;gap:8px}
+  .hu{font-size:.74rem;padding:4px 11px}
+  .ha .bo{font-size:.72rem;padding:6px 12px}
+  .mn{padding:20px 16px 48px}
+  .su{grid-template-columns:1fr 1fr;gap:10px}
+  .mgmt-su{grid-template-columns:1fr!important}
+  .mg{grid-template-columns:1fr}
+  .gt{flex-direction:column;align-items:flex-start;gap:12px}
+  th,td{padding:9px 10px;font-size:.74rem}
+  .lc{padding:36px 28px}
+}
+@media print{
+  *{transition:none!important;animation:none!important;box-shadow:none!important}
+  body{print-color-adjust:exact;-webkit-print-color-adjust:exact;background:#fff}
+  .hd,.bo,.bb,.fn-social{display:none!important}
+}
+</style>
+</head>
+<body>
+<iframe name="pwSaveFrame" style="display:none;width:0;height:0;border:0" tabindex="-1" aria-hidden="true"></iframe>
+<div class="ld" id="lo"><div class="sp"></div><div class="lt">در حال بارگذاری اطلاعات صندوق...</div></div>
+<div class="lp" id="lp">
+<div class="lc">
+<div class="ll"><div class="lli"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div>
+<h2>صندوق قرض‌الحسنه خانوادگی</h2><p>ورود اعضا</p></div>
+<div class="le" id="le">شماره موبایل یا رمز عبور اشتباه است<br><small>توجه: اعداد را به صورت انگلیسی وارد کنید</small></div>
+<form id="loginForm" autocomplete="on" action="#" method="post">
+<div class="fg"><label class="fl">شماره موبایل</label><input type="tel" class="fi" id="ph" name="username" autocomplete="username" placeholder="09121234567" maxlength="11" required></div>
+<div class="fg"><label class="fl">رمز عبور</label><input type="password" class="fi" id="pw" name="password" autocomplete="current-password" placeholder="****" required></div>
+<div class="rr"><input type="checkbox" id="rm" checked><label for="rm">مرا به خاطر بسپار</label></div>
+<button class="lb" type="submit">ورود به حساب</button>
+</form>
+<a class="ig-link" href="https://instagram.com/omid.fard.sw" target="_blank">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+@omid.fard.sw
+</a>
+</div></div>
+
+<div class="modal-overlay" id="loginModal">
+    <div class="modal-box">
+        <div class="modal-text" id="modalDateText"></div>
+        <div class="modal-alert" id="modalAlertBox"></div>
+        <div class="modal-notice" id="modalNoticeBox"></div>
+        <button class="modal-btn" onclick="confirmLoginModal()">متوجه شدم، ورود به سیستم</button>
+    </div>
+</div>
+
+<div class="app" id="app">
+<header class="hd"><h1>صندوق قرض‌الحسنه خانوادگی</h1><div class="ha"><span class="hu" id="hun"></span><button class="bo" id="mgmtBtn" style="display:none;background:var(--pri-l);color:var(--pri);border-color:var(--pri-border)" onclick="showManagementReports()">گزارشات مدیریتی</button><button class="bo" onclick="logout()">خروج</button></div></header>
+<main class="mn" id="mc"></main>
+</div>
+<div class="update-toast" id="updateToast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span id="updateToastText">اطلاعات صندوق به‌روزرسانی شد</span></div>
+<script>
+const SID='1E8OVNRGvyKmyDBnghSjaIMGS6m0K-NtIqrL9KEB1kTM';
+let D={members:[],ledger:[],loans:[],payments:[],time:[]},U=null;
+let currentView={fn:null,args:[]};
+
+function cellVal(cell){
+if(!cell) return '';
+if(cell.f) return cell.f;
+if(cell.v===null||cell.v===undefined) return '';
+return cell.v;
+}
+
+function loadSheet(n,cb){
+const cn='cb_'+n+'_'+Date.now();
+const sheetName=(n==='time')?'Time':n;
+const extra=(n==='time')?'&headers=0':'';
+const url=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=responseHandler:${cn}&sheet=${sheetName}${extra}`;
+window[cn]=function(r){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);
+if(r.status==='error'){cb(null,r.errors);return}
+const t=r.table,h=t.cols.map(c=>c.label||c.id);
+const rows=t.rows.map(row=>{const o={};row.c.forEach((c,i)=>{if(h[i])o[h[i]]=cellVal(c);});return o;});cb(rows, null, h);};
+const sc=document.createElement('script');sc.src=url;
+sc.onerror=function(){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);cb(null,'err');};
+document.body.appendChild(sc);}
+
+function loadNoticeCell(cb){
+const cn='cb_notice_'+Date.now();
+const url=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=responseHandler:${cn}&sheet=Time&range=B1&headers=0`;
+window[cn]=function(r){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);
+if(r.status==='error'){cb('');return;}
+let val='';
+try{const t=r.table;if(t.rows&&t.rows[0]&&t.rows[0].c&&t.rows[0].c[0]){val=cellVal(t.rows[0].c[0]);}}catch(e){}
+cb(String(val||'').trim());};
+const sc=document.createElement('script');sc.src=url;
+sc.onerror=function(){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);cb('');};
+document.body.appendChild(sc);}
+
+function loadAll(){
+const sheets=['members','ledger','loans','payments','time'];let done=0,err=false,noticeDone=false;
+D.notice_text='';
+function checkDone(){if(err)return;if(done===5&&noticeDone){norm();document.getElementById('lo').classList.add('h');autoLogin();}}
+loadNoticeCell(function(v){D.notice_text=v;noticeDone=true;checkDone();});
+sheets.forEach(s=>{loadSheet(s,(rows,e,h)=>{if(err)return;
+if(e){err=true;document.getElementById('lo').innerHTML='<div class="eb"><p>خطا در بارگذاری "'+s+'"</p><p style="margin-top:8px;font-size:.75rem">مطمئن شوید شیت دسترسی عمومی دارد</p></div>';return;}
+D[s]=rows;
+D[s+'_h']=h;
+done++;checkDone();});});}
+
+function norm(){
+D.members.forEach(r=>{r.member_id=Number(r.member_id)||0;r.name=String(r.name||'').trim();r.phone=String(r.phone||'').trim();r.password=String(r.password||'').trim();r.group_id=String(r.group_id||'').trim();r.role=String(r.role||'').trim().toLowerCase();});
+D.ledger.forEach(r=>{r.member_id=Number(r.member_id)||0;r.date=String(r.date||'').trim();r.description=String(r.description||'').trim();r.debit=Number(r.debit)||0;r.credit=Number(r.credit)||0;});
+D.loans.forEach(r=>{r.member_id=Number(r.member_id)||0;r.loan_id=String(r.loan_id||'').trim();r.savings=Number(r['Savings balance'])||0;r.outstanding=Number(r['Outstanding loan balance'])||0;r.amount=Number(r.amount)||0;r.installments=Number(r.installments)||0;r.start_date=String(r.start_date||'').trim();});
+D.payments.forEach(r=>{r.loan_id=String(r.loan_id||'').trim();r.nam=String(r.nam||'').trim();r.installment_no=Number(r.installment_no)||0;r.amount=Number(r.amount)||0;r.due_date=String(r.due_date||'').trim();r.amount_paid=Number(r['amount paid'])||0;r.paid_date=String(r.paid_date||'').trim();});}
+
+function showUpdateToast(msg){
+const el=document.getElementById('updateToast');
+if(!el)return;
+document.getElementById('updateToastText').textContent=msg||'اطلاعات صندوق به‌روزرسانی شد';
+el.classList.add('show');
+clearTimeout(el._hideT);
+el._hideT=setTimeout(()=>{el.classList.remove('show');},4000);
+}
+
+function silentReload(){
+if(!U)return; // فقط وقتی کاربر وارد شده، بروزرسانی خاموش انجام شود
+if(document.getElementById('app').style.display!=='block')return;
+const sheets=['members','ledger','loans','payments','time'];
+let done=0,err=false,noticeDone=false;
+const newD={};
+function finish(){
+if(err)return;
+if(done!==5||!noticeDone)return;
+const prevCounts=[D.members.length,D.ledger.length,D.loans.length,D.payments.length,D.time.length];
+D=newD;
+norm();
+const newCounts=[D.members.length,D.ledger.length,D.loans.length,D.payments.length,D.time.length];
+const changed=prevCounts.some((c,i)=>c!==newCounts[i]);
+if(currentView.fn){try{currentView.fn.apply(null,currentView.args);}catch(e){}}
+if(changed)showUpdateToast('اطلاعات جدیدی در صندوق ثبت شده است');
+}
+loadNoticeCell(function(v){newD.notice_text=v;noticeDone=true;finish();});
+sheets.forEach(s=>{loadSheet(s,(rows,e,h)=>{
+if(err)return;
+if(e){err=true;return;} // در صورت خطا، اطلاعات فعلی دست‌نخورده باقی می‌ماند
+newD[s]=rows;newD[s+'_h']=h;
+done++;finish();
+});});
+}
+setInterval(silentReload,5*60*1000); // بروزرسانی خودکار هر ۵ دقیقه
+
+function fmt(n){if(n===0)return'۰';return(n<0?'-':'')+Math.abs(n).toLocaleString('fa-IR');}
+function grp(gid){return D.members.filter(m=>m.group_id===gid);}
+function ini(n){const p=n.split(' ');return p.length>1?p[0][0]+p[1][0]:p[0][0];}
+function getLoan(mid){return D.loans.find(l=>l.member_id===mid)||null;}
+function getPay(lid){return D.payments.filter(p=>p.loan_id===lid);}
+function getOverdue(lid){return getPay(lid).filter(p=>p.amount_paid===0&&p.due_date<='1405/04/18');}
+function getMemberStats(mid){
+const loan=getLoan(mid);if(!loan||!loan.loan_id)return{overdue:0,overdueAmt:0,installAmt:0,saving10:0,totalDue:0};
+const od=getOverdue(loan.loan_id);
+const installAmt=Math.round(loan.amount/loan.installments);
+const saving10=Math.round(installAmt*0.1);
+return{overdue:od.length,overdueAmt:od.reduce((s,p)=>s+p.amount,0),installAmt,saving10,totalDue:installAmt+saving10};}
+
+function autoLogin(){try{const p=localStorage.getItem('sf_p'),w=localStorage.getItem('sf_w'),r=localStorage.getItem('sf_r');
+if(r==='1'&&p&&w){const u=D.members.find(m=>m.phone&&m.password&&m.phone===p&&m.password===w);if(u){U=u;showLoginAlert();return;}}}catch(e){}showLogin();}
+
+function showLogin(){document.getElementById('lp').style.display='flex';
+try{const p=localStorage.getItem('sf_p'),w=localStorage.getItem('sf_w'),r=localStorage.getItem('sf_r');
+if(r==='1'&&p){document.getElementById('ph').value=p;if(w)document.getElementById('pw').value=w;document.getElementById('rm').checked=true;}}catch(e){}}
+
+function showLoginAlert() {
+    let updateDate = '';
+    if (D.time_h && D.time_h[0] && D.time_h[0] !== 'A' && !D.time_h[0].startsWith('id:')) {
+        updateDate = D.time_h[0];
+    } else if (D.time && D.time.length > 0) {
+        updateDate = Object.values(D.time[0])[0];
+    }
+    if (!updateDate) updateDate = 'نامشخص';
+
+    let noticeBox = document.getElementById('modalNoticeBox');
+    let noticeText = String(D.notice_text || '').trim();
+    if (noticeText) {
+        noticeBox.innerHTML = noticeText;
+        noticeBox.style.display = 'block';
+    } else {
+        noticeBox.style.display = 'none';
+    }
+
+    document.getElementById('modalDateText').innerHTML = 'تاریخ آخرین به‌روزرسانی اطلاعات حساب‌ها:<br><b style="color:var(--pri); font-size:1.05rem; display:block; margin-top:4px;">' + updateDate + '</b>';
+    document.getElementById('modalDateText').style.display = 'block';
+
+    const gm = grp(U.group_id);
+    let tOdCount = 0;
+    let tOdAmt = 0;
+    gm.forEach(m => {
+        const st = getMemberStats(m.member_id);
+        tOdCount += st.overdue;
+        tOdAmt += st.overdueAmt;
+    });
+    let alertBox = document.getElementById('modalAlertBox');
+    if (tOdCount > 0) {
+        alertBox.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>' +
+                             'عضو محترم صندوق، در گروه شما مجموعاً <b>' + tOdCount.toLocaleString('fa-IR') + ' قسط معوق</b> به مبلغ کل <b>' + fmt(tOdAmt) + ' ریال</b> وجود دارد. لطفاً در اسرع وقت نسبت به پرداخت آن اقدام نمایید.';
+        alertBox.style.display = 'block';
+    } else {
+        alertBox.style.display = 'none';
+    }
+
+    document.getElementById('lp').style.display = 'none';
+    document.getElementById('loginModal').style.display = 'flex';
+}
+
+function confirmLoginModal() {
+    document.getElementById('loginModal').style.display = 'none';
+    showApp();
+}
+
+function showApp(){document.getElementById('app').style.display='block';
+document.getElementById('hun').textContent=U.name+(U.role==='leadera'?' (سرگروه ارشد)':(U.role==='leader'?' (سرگروه)':''));
+document.getElementById('mgmtBtn').style.display=(U.role==='leadera')?'inline-flex':'none';
+showOverview();}
+
+function login(){const p=document.getElementById('ph').value.trim(),w=document.getElementById('pw').value.trim(),r=document.getElementById('rm').checked;
+if(!p||!w){document.getElementById('le').innerHTML='لطفاً شماره موبایل و رمز عبور را وارد کنید<br><small>هر دو فیلد الزامی است</small>';document.getElementById('le').style.display='block';return;}
+const u=D.members.find(m=>m.phone&&m.password&&m.phone===p&&m.password===w);
+if(!u){document.getElementById('le').innerHTML='شماره موبایل یا رمز عبور اشتباه است<br><small>توجه: اعداد را به صورت انگلیسی وارد کنید</small>';document.getElementById('le').style.display='block';return;}
+document.getElementById('le').style.display='none';
+try{if(r){localStorage.setItem('sf_p',p);localStorage.setItem('sf_w',w);localStorage.setItem('sf_r','1');}
+else{localStorage.removeItem('sf_p');localStorage.removeItem('sf_w');localStorage.removeItem('sf_r');}}catch(e){}
+U=u;
+saveCredentialToBrowser(p,w);
+showLoginAlert();
+}
+
+function saveCredentialToBrowser(username, password){
+    try{
+        if(window.PasswordCredential && navigator.credentials && navigator.credentials.store){
+            const cred = new PasswordCredential({id: username, password: password, name: username});
+            navigator.credentials.store(cred).catch(function(){});
+        }
+    }catch(e){}
+    try{
+        let hf = document.createElement('form');
+        hf.method = 'POST';
+        hf.action = location.href.split('#')[0];
+        hf.target = 'pwSaveFrame';
+        hf.style.display = 'none';
+        hf.setAttribute('autocomplete', 'on');
+        let hu = document.createElement('input');
+        hu.type = 'text'; hu.name = 'username'; hu.setAttribute('autocomplete','username'); hu.value = username;
+        let hp = document.createElement('input');
+        hp.type = 'password'; hp.name = 'password'; hp.setAttribute('autocomplete','current-password'); hp.value = password;
+        hf.appendChild(hu);
+        hf.appendChild(hp);
+        document.body.appendChild(hf);
+        hf.submit();
+        setTimeout(function(){ if(hf.parentNode) hf.parentNode.removeChild(hf); }, 3000);
+    }catch(e){}
+}
+
+function logout(){U=null;document.getElementById('app').style.display='none';document.getElementById('lp').style.display='flex';document.getElementById('le').style.display='none';}
+
+document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    login();
+});
+
+function copyText(txt, btnElement) {
+    function showCopied() {
+        let originalHTML = btnElement.innerHTML;
+        btnElement.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        setTimeout(() => { btnElement.innerHTML = originalHTML; }, 1500);
+    }
+    function fallbackCopy() {
+        try {
+            let ta = document.createElement('textarea');
+            ta.value = txt;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            ta.style.top = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showCopied();
+        } catch (e) {
+            alert('کپی انجام نشد. لطفا مقدار را به صورت دستی کپی کنید: ' + txt);
+        }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+        navigator.clipboard.writeText(txt).then(showCopied).catch(fallbackCopy);
+    } else {
+        fallbackCopy();
+    }
+}
+
+function bankHtml(){return `<div class="bank"><div class="bank-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>اطلاعات حساب بانکی (بانک صادرات)</div>
+<div class="bank-rows">
+<div class="bank-row"><span class="bank-label">صاحب حساب:</span><span class="bank-val">امید پاکت چیان فرد</span></div>
+<div class="bank-row"><span class="bank-label">شماره کارت:</span><span class="bank-val">6037-6915-5311-2053</span>
+<button class="cp-btn" onclick="copyText('6037691553112053', this)" title="کپی شماره کارت"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button></div>
+<div class="bank-row"><span class="bank-label">شماره شبا:</span><span class="bank-val">IR300190000000214371588006</span>
+<button class="cp-btn" onclick="copyText('IR300190000000214371588006', this)" title="کپی شماره شبا"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button></div>
+<div class="bank-row"><span class="bank-label">شماره حساب:</span><span class="bank-val">0214371588006</span>
+<button class="cp-btn" onclick="copyText('0214371588006', this)" title="کپی شماره حساب"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button></div>
+</div></div>`;}
+
+function openApp(appUrl,webUrl){
+  var opened=false;
+  var onHide=function(){if(document.hidden)opened=true;};
+  document.addEventListener('visibilitychange',onHide);
+  window.addEventListener('blur',function onBlur(){opened=true;window.removeEventListener('blur',onBlur);});
+  var t=setTimeout(function(){
+    document.removeEventListener('visibilitychange',onHide);
+    if(!opened)window.location.href=webUrl;
+  },1200);
+  window.location.href=appUrl;
+}
+function footerHtml(){return '<p class="fn">طراحی و توسعه: <a href="https://instagram.com/omid.fard.sw" target="_blank">امید   فرد</a> · ۱۴۰۵</p>'+
+'<div class="fn-social">'+
+'<a class="fn-rb" href="https://rubika.ir/omid_fard" onclick="event.preventDefault();openApp(/Android/i.test(navigator.userAgent)?\'intent://rubika.ir/omid_fard#Intent;scheme=https;package=app.rbmain.a;S.browser_fallback_url=https%3A%2F%2Frubika.ir%2Fomid_fard;end\':\'rubika://rubika.ir/omid_fard\',\'https://rubika.ir/omid_fard\')" title="پیام در روبیکا">'+
+'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.5 7.5c0 1.1-.53 2.06-1.34 2.68L17 16h-2.3l-1.4-2.5H10v2.5H8V7.5h5.5c1.66 0 3 1.34 3 2zm-3-.5H10v1.5h3.5c.41 0 .75-.34.75-.75S13.91 9 13.5 9z"/></svg>'+
+'</a>'+
+'<a class="fn-tg" href="https://t.me/+989133160578" onclick="event.preventDefault();openApp(\'tg://resolve?phone=989133160578\',\'https://t.me/+989133160578\')" title="پیام در تلگرام">'+
+'<svg viewBox="0 0 24 24"><path d="M21.05 3.16 2.9 10.36c-1.24.5-1.24 1.19-.23 1.5l4.65 1.45 10.78-6.8c.5-.32.97-.15.59.2L9.9 14.3l-.36 4.94c.52 0 .75-.24 1.03-.52l2.47-2.4 5.13 3.78c.94.52 1.62.25 1.86-.87l3.37-15.87c.35-1.38-.53-2-1.4-1.7z"/></svg>'+
+'</a>'+
+'<a class="fn-wa" href="https://wa.me/989133160578" onclick="event.preventDefault();openApp(\'whatsapp://send?phone=989133160578\',\'https://wa.me/989133160578\')" title="پیام در واتساپ">'+
+'<svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.09c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.89-1.25-4.77-4.16-4.92-4.35-.14-.19-1.18-1.57-1.18-2.99 0-1.42.75-2.12 1.01-2.41.26-.29.58-.36.77-.36.19 0 .39 0 .55.01.18.01.42-.07.65.5.24.58.81 2 .88 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.61-.07.16-.19.7-.81.89-1.09.19-.28.37-.23.62-.14.26.09 1.63.77 1.91.91.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>'+
+'</a>'+
+'</div>';}
+
+function isLead(r){return r==='leader'||r==='leadera';}
+function showOverview(){
+currentView={fn:showOverview,args:[]};
+const gm=isLead(U.role)?grp(U.group_id):[U];
+if(!isLead(U.role)||gm.length===1){showDetail(U.member_id);return;}
+const ts=gm.reduce((s,m)=>{const l=getLoan(m.member_id);return s+(l?l.savings:0);},0);
+const td=gm.reduce((s,m)=>{const l=getLoan(m.member_id);return s+(l?l.outstanding:0);},0);
+const tOd=gm.reduce((s,m)=>s+getMemberStats(m.member_id).overdue,0);
+const tOdAmt=gm.reduce((s,m)=>s+getMemberStats(m.member_id).overdueAmt,0);
+const tTotal=gm.reduce((s,m)=>s+getMemberStats(m.member_id).totalDue,0);
+
+let h=`<div class="gt">
+<div class="gi"><div class="gl">اعضای گروه</div><div class="gv">${gm.length.toLocaleString('fa-IR')} نفر</div></div>
+<div class="gi"><div class="gl">مجموع پس‌انداز</div><div class="gv">${fmt(ts)} ریال</div></div>
+<div class="gi"><div class="gl">مجموع بدهی وام</div><div class="gv" style="color:var(--er)">${fmt(td)} ریال</div></div>
+<div class="gi"><div class="gl">اقساط معوق</div><div class="gv" style="color:var(--er)">${tOd.toLocaleString('fa-IR')} قسط (${fmt(tOdAmt)} ریال)</div></div>
+<div class="gi"><div class="gl">جمع واریزی ماهانه (قسط + ۱۰٪)</div><div class="gv">${fmt(tTotal)} ریال</div></div>
+</div>`;
+h+='<div class="mg">';
+gm.forEach(m=>{const l=getLoan(m.member_id);const sv=l?l.savings:0;const ob=l?l.outstanding:0;
+const st=getMemberStats(m.member_id);
+h+=`<div class="mc" onclick="showDetail(${m.member_id})"><div class="mh"><div class="ma">${ini(m.name)}</div><div><div class="mna">${m.name}</div><div class="mr">${m.role==='leader'?'سرگروه':'عضو'}</div></div></div>
+<div class="ms">
+<div><div class="msl">مانده حساب</div><div class="msv p">${fmt(sv)}</div></div>
+<div><div class="msl">مانده بدهی وام</div><div class="msv ${ob>0?'n':'z'}">${fmt(ob)}</div></div>
+<div><div class="msl">اقساط معوق</div><div class="msv ${st.overdue>0?'n':'z'}">${st.overdue>0?st.overdue.toLocaleString('fa-IR')+' قسط':'—'}</div></div>
+<div><div class="msl">واریزی ماهانه</div><div class="msv w">${fmt(st.totalDue)}</div></div>
+</div></div>`;});
+h+='</div>';
+h+=bankHtml();
+h+=footerHtml();
+document.getElementById('mc').innerHTML=h;}
+
+function showDetail(mid,fromMgmt){
+currentView={fn:showDetail,args:[mid,fromMgmt]};
+const m=D.members.find(x=>x.member_id===mid);
+const ml=D.ledger.filter(r=>r.member_id===mid);
+const loan=getLoan(mid);
+const sv=loan?loan.savings:0;const ob=loan?loan.outstanding:0;
+const st=getMemberStats(mid);
+const back=fromMgmt||(isLead(U.role)&&grp(U.group_id).length>1);
+let h='';
+if(back)h+=`<button class="bb" onclick="${fromMgmt?'showManagementReports()':'showOverview()'}">← بازگشت</button>`;
+h+=`<div class="dh"><div class="dn">${m.name}</div></div>
+<div class="su">
+<div class="si hl"><div class="sl">مانده حساب پس‌انداز</div><div class="sv p">${fmt(sv)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
+<div class="si"><div class="sl">مانده بدهی وام</div><div class="sv w">${fmt(ob)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
+<div class="si"><div class="sl">اقساط معوق</div><div class="sv er">${st.overdue>0?st.overdue.toLocaleString('fa-IR')+' قسط ('+fmt(st.overdueAmt)+')':'—'}</div></div>
+<div class="si"><div class="sl">مبلغ قسط</div><div class="sv">${fmt(st.installAmt)}</div></div>
+<div class="si"><div class="sl">پس‌انداز اجباری (۱۰٪)</div><div class="sv">${fmt(st.saving10)}</div></div>
+<div class="si"><div class="sl">جمع واریزی ماهانه</div><div class="sv w">${fmt(st.totalDue)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
+</div>`;
+
+if(loan&&loan.loan_id){
+const pays=getPay(loan.loan_id);
+const paidC=pays.filter(p=>p.amount_paid>0).length;
+const rem=loan.installments-paidC;
+const pct=loan.installments>0?(paidC/loan.installments*100).toFixed(0):0;
+h+=`<div class="lp2"><div class="li"><span class="lti">وام ${fmt(loan.amount)} ریال (${loan.installments.toLocaleString('fa-IR')} قسط)</span>
+<span class="ld2">شروع: ${loan.start_date}</span></div>
+<div class="pb"><div class="pf" style="width:${pct}%"></div></div>
+<div class="pl"><span>${paidC.toLocaleString('fa-IR')} قسط پرداخت شده</span><span>${rem.toLocaleString('fa-IR')} قسط باقیمانده</span></div></div>
+<section class="sc"><div class="sh"><h2 class="st">اقساط وام</h2>
+</div>
+<div class="tw"><table><thead><tr><th>قسط</th><th>مبلغ</th><th>سررسید</th><th>تاریخ پرداخت</th><th>وضعیت</th></tr></thead><tbody>`;
+pays.forEach(p=>{
+const paid=p.amount_paid>0;const overdue=!paid&&p.due_date<='1405/04/18';
+const cls=paid?'sp2':overdue?'spe':'su2';const txt=paid?'پرداخت شده':overdue?'معوق':'آینده';
+h+=`<tr><td>${p.installment_no.toLocaleString('fa-IR')}</td><td>${fmt(p.amount)}</td><td>${p.due_date}</td>
+<td>${p.paid_date||'—'}</td><td><span class="sb ${cls}">${txt}</span></td></tr>`;});
+h+=`</tbody></table></div></section>`;}
+
+if(ml.length>0){
+h+=`<section class="sc"><div class="sh"><h2 class="st">صورتحساب</h2></div>
+<div class="tw"><table><thead><tr><th>ردیف</th><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>`;
+ml.forEach((r,i)=>{h+=`<tr><td>${(i+1).toLocaleString('fa-IR')}</td><td>${r.date}</td><td>${r.description}</td>
+<td class="ad">${r.debit>0?fmt(r.debit):'—'}</td><td class="ac">${r.credit>0?fmt(r.credit):'—'}</td></tr>`;});
+h+=`</tbody></table>
+<div class="bx"><span class="bxl">مانده صورتحساب:</span><span class="bxv" style="color:var(--ok)">${fmt(sv)} ریال</span></div></div></section>`;}
+
+h+=footerHtml();
+document.getElementById('mc').innerHTML=h;}
+
+/* ===== گزارشات مدیریتی (فقط leaderA) ===== */
+function jalaliMonthDays(m){return m<=6?31:(m<=11?30:29);}
+function addJalaliMonths(dateStr,months){
+if(!dateStr)return'—';
+const p=dateStr.split('/');if(p.length!==3)return'—';
+let y=Number(p[0]),m=Number(p[1]),d=Number(p[2]);
+if(!y||!m||!d)return'—';
+m+=months;y+=Math.floor((m-1)/12);m=((m-1)%12+12)%12+1;
+const dim=jalaliMonthDays(m);if(d>dim)d=dim;
+return y+'/'+String(m).padStart(2,'0')+'/'+String(d).padStart(2,'0');}
+
+const JCUM=[0,31,62,93,124,155,186,216,246,276,306,336];
+function jalaliToLinear(dateStr){const p=(dateStr||'').split('/');if(p.length!==3)return null;
+const y=Number(p[0]),m=Number(p[1]),d=Number(p[2]);if(!y||!m||!d)return null;return y*365+JCUM[m-1]+d;}
+function linearToJalali(lin){lin=Math.round(lin);let y=Math.floor((lin-1)/365);let rem=lin-y*365;
+let mm=1,dd=rem;for(let i=11;i>=0;i--){if(rem>JCUM[i]){mm=i+1;dd=rem-JCUM[i];break;}}
+return y+'/'+String(mm).padStart(2,'0')+'/'+String(dd).padStart(2,'0');}
+
+function timeHeaderMode(){const h=D.time_h&&D.time_h[0];return !h||h==='A'||String(h).startsWith('id:');}
+function timeCell(letter,rowNum){
+const colIdx=letter.charCodeAt(0)-65;
+if(timeHeaderMode()){const idx=rowNum-1;const row=D.time[idx];return row?row[letter]:null;}
+const idx=rowNum-2;if(idx<0)return D.time_h[colIdx];
+const row=D.time[idx];const key=D.time_h[colIdx];return row?row[key]:null;}
+function timeColumn(letter){
+const colIdx=letter.charCodeAt(0)-65;
+if(timeHeaderMode())return D.time.slice(1).map(r=>r[letter]);
+const key=D.time_h[colIdx];return D.time.map(r=>r[key]);}
+
+function showManagementReports(){
+currentView={fn:showManagementReports,args:[]};
+let h='<button class="bb" onclick="showOverview()">← بازگشت</button>';
+h+='<div class="dh"><div class="dn">گزارشات مدیریتی صندوق</div></div>';
+
+const withBal=D.members.filter(m=>{const l=getLoan(m.member_id);return l&&l.savings>0;})
+.sort((a,b)=>{if(a.group_id!==b.group_id)return a.group_id.localeCompare(b.group_id,'fa');return a.name.localeCompare(b.name,'fa');});
+
+const totalMembersWithBal=withBal.length;
+const activeLoans=D.loans.filter(l=>l.loan_id&&l.outstanding>0);
+const totalLoanAmount=activeLoans.reduce((s,l)=>s+l.amount,0);
+let overdueMembers=0,overdueAmt=0;
+D.loans.forEach(l=>{if(!l.loan_id)return;const st=getMemberStats(l.member_id);if(st.overdue>0){overdueMembers++;overdueAmt+=st.overdueAmt;}});
+
+let forecastInstallSum=0,forecastSavingSum=0;const dueDates=[];
+activeLoans.forEach(l=>{
+const pays=getPay(l.loan_id).filter(p=>p.amount_paid===0).sort((a,b)=>a.due_date.localeCompare(b.due_date));
+if(pays.length){forecastInstallSum+=pays[0].amount;const lin=jalaliToLinear(pays[0].due_date);if(lin)dueDates.push(lin);
+const st=getMemberStats(l.member_id);forecastSavingSum+=st.saving10;}
+});
+const avgDue=dueDates.length?linearToJalali(dueDates.reduce((s,x)=>s+x,0)/dueDates.length):'—';
+
+h+='<div class="su mgmt-su">'+
+'<div class="si hl"><div class="sl">اعضای دارای موجودی حساب</div><div class="sv">'+totalMembersWithBal.toLocaleString('fa-IR')+' نفر</div></div>'+
+'<div class="si"><div class="sl">وام‌های فعال</div><div class="sv">'+activeLoans.length.toLocaleString('fa-IR')+' وام<br><small style="font-size:.68rem;font-weight:400;color:var(--t2)">'+fmt(totalLoanAmount)+' ریال</small></div></div>'+
+'<div class="si"><div class="sl">اعضای دارای قسط معوق</div><div class="sv er">'+overdueMembers.toLocaleString('fa-IR')+' نفر<br><small style="font-size:.68rem;font-weight:400;color:var(--er)">'+fmt(overdueAmt)+' ریال</small></div></div>'+
+'<div class="si"><div class="sl">پیش‌بینی اقساط ماه آینده</div><div class="sv w">'+fmt(forecastInstallSum)+' ریال<br><small style="font-size:.68rem;font-weight:400;color:var(--t2)">میانگین سررسید: '+avgDue+'</small></div></div>'+
+'<div class="si"><div class="sl">پیش‌بینی پس‌انداز اجباری ماه آینده</div><div class="sv">'+fmt(forecastSavingSum)+' ریال</div></div>'+
+'</div>';
+
+const groupColors=['#15803d','#0369a1','#a16207','#7e22ce','#be123c','#0f766e','#b45309','#4338ca'];
+const groupIds=[...new Set(withBal.map(m=>m.group_id))];
+const groupColorMap={};groupIds.forEach((g,i)=>{groupColorMap[g]=groupColors[i%groupColors.length];});
+
+h+='<section class="sc"><div class="sh"><h2 class="st">لیست اعضای دارای موجودی حساب</h2></div><div class="tw"><table><thead><tr>'+
+'<th>نام عضو</th><th>مانده سپرده</th><th>مانده بدهی وام</th><th>تاریخ دریافت وام</th><th>تعداد کل اقساط</th><th>تاریخ پایان وام</th><th>اقساط معوق</th><th>مبلغ معوقی</th>'+
+'</tr></thead><tbody>';
+let prevGroup=null;
+withBal.forEach(m=>{
+const l=getLoan(m.member_id);const st=getMemberStats(m.member_id);
+const hasLoan=l&&l.loan_id;
+const endDate=hasLoan?addJalaliMonths(l.start_date,l.installments):'—';
+const color=groupColorMap[m.group_id];
+const newGroup=m.group_id!==prevGroup;
+const rowStyle=' style="cursor:pointer;'+(newGroup&&prevGroup!==null?'border-top:3px solid '+color:'')+'"';
+prevGroup=m.group_id;
+h+='<tr'+rowStyle+' onclick="showDetail('+m.member_id+',true)"><td>'+m.name+'</td><td>'+fmt(l.savings)+'</td><td>'+(hasLoan?fmt(l.outstanding):'—')+'</td>'+
+'<td>'+(hasLoan?l.start_date:'—')+'</td><td>'+(hasLoan?l.installments.toLocaleString('fa-IR'):'—')+'</td>'+
+'<td>'+endDate+'</td><td>'+(st.overdue>0?st.overdue.toLocaleString('fa-IR'):'—')+'</td>'+
+'<td>'+(st.overdueAmt>0?fmt(st.overdueAmt):'—')+'</td></tr>';
+});
+h+='</tbody></table></div></section>';
+
+const overdueList=[];
+D.loans.forEach(l=>{if(!l.loan_id)return;const od=getOverdue(l.loan_id);if(od.length){const m=D.members.find(x=>x.member_id===l.member_id);
+const sorted=od.slice().sort((a,b)=>a.due_date.localeCompare(b.due_date));
+overdueList.push({name:m?m.name:'—',count:od.length,amt:od.reduce((s,p)=>s+p.amount,0),first:sorted[0].due_date});}});
+overdueList.sort((a,b)=>a.first.localeCompare(b.first));
+
+h+='<section class="sc"><div class="sh"><h2 class="st">اعضای دارای قسط معوق</h2></div>';
+if(overdueList.length){
+h+='<div class="tw"><table><thead><tr><th>نام عضو</th><th>تعداد قسط معوق</th><th>مبلغ معوقی</th><th>تاریخ اولین قسط معوق</th></tr></thead><tbody>';
+overdueList.forEach(o=>{h+='<tr><td>'+o.name+'</td><td>'+o.count.toLocaleString('fa-IR')+'</td><td>'+fmt(o.amt)+'</td><td>'+o.first+'</td></tr>';});
+h+='</tbody></table></div>';
+}else{h+='<div class="tw" style="padding:16px;text-align:center;color:var(--t3);font-size:.85rem">هیچ قسط معوقی وجود ندارد</div>';}
+h+='</section>';
+
+const sumSavings=D.loans.reduce((s,l)=>s+(l.savings||0),0);
+const sumOutstanding=D.loans.reduce((s,l)=>s+(l.outstanding||0),0);
+const profitReserve=Number(timeCell('B',2))||0;
+const income=Number(timeCell('B',3))||0;
+const expense=Number(timeCell('B',4))||0;
+const sum1=sumSavings+profitReserve+income;
+const sum2=sumOutstanding+expense;
+const bankBalance=sum1-sum2;
+
+h+='<section class="sc"><div class="sh"><h2 class="st">ترازنامه صندوق</h2></div><div class="lp2">'+
+'<div class="bank-rows">'+
+'<div class="bank-row"><span class="bank-label">جمع موجودی حساب اعضا</span><span class="bank-val" style="margin-left:auto">'+fmt(sumSavings)+' ریال</span></div>'+
+'<div class="bank-row"><span class="bank-label">ذخیره سود</span><span class="bank-val" style="margin-left:auto">'+fmt(profitReserve)+' ریال</span></div>'+
+'<div class="bank-row"><span class="bank-label">درآمدها</span><span class="bank-val" style="margin-left:auto">'+fmt(income)+' ریال</span></div>'+
+'</div><div class="bx"><span class="bxl">جمع (۱)</span><span class="bxv">'+fmt(sum1)+' ریال</span></div>'+
+'<div class="bank-rows" style="margin-top:14px">'+
+'<div class="bank-row"><span class="bank-label">جمع بدهی وام اعضا</span><span class="bank-val" style="margin-left:auto">'+fmt(sumOutstanding)+' ریال</span></div>'+
+'<div class="bank-row"><span class="bank-label">هزینه‌ها</span><span class="bank-val" style="margin-left:auto">'+fmt(expense)+' ریال</span></div>'+
+'</div><div class="bx"><span class="bxl">جمع (۲)</span><span class="bxv">'+fmt(sum2)+' ریال</span></div>'+
+'<div class="bx" style="margin-top:14px;background:var(--pri);border-color:var(--pri-h)"><span class="bxl" style="color:#fff">موجودی بانک</span><span class="bxv" style="color:#fff">'+fmt(bankBalance)+' ریال</span></div>'+
+'</div></section>';
+
+const names=timeColumn('C'),amounts=timeColumn('D'),reqDates=timeColumn('E'),giveDates=timeColumn('F');
+h+='<section class="sc"><div class="sh"><h2 class="st">درخواست‌های وام ثبت‌شده</h2></div>';
+let reqRows='';let hasAny=false;
+for(let i=0;i<names.length;i++){
+const nm=String(names[i]||'').trim();
+if(!nm)continue;
+hasAny=true;
+const amt=amounts[i]?fmt(Number(amounts[i])||0)+' ریال':'—';
+const rd=String(reqDates[i]||'').trim()||'—';
+const gd=String(giveDates[i]||'').trim()||'—';
+reqRows+='<tr><td>'+nm+'</td><td>'+amt+'</td><td>'+rd+'</td><td>'+gd+'</td></tr>';
+}
+if(hasAny){h+='<div class="tw"><table><thead><tr><th>نام متقاضی</th><th>مبلغ درخواستی</th><th>تاریخ درخواست</th><th>تاریخ تحویل فرم</th></tr></thead><tbody>'+reqRows+'</tbody></table></div>';}
+else{h+='<div class="tw" style="padding:16px;text-align:center;color:var(--t3);font-size:.85rem">درخواستی ثبت نشده است</div>';}
+h+='</section>';
+
+h+=footerHtml();
+document.getElementById('mc').innerHTML=h;}
+
+loadAll();
+</script>
+</body>
+</html>
