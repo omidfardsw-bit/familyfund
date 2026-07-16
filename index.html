@@ -196,7 +196,7 @@ td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bot
 <div class="fg"><label class="fl">شماره موبایل</label><input type="tel" class="fi" id="ph" name="username" autocomplete="username" placeholder="09121234567" maxlength="11" required></div>
 <div class="fg"><label class="fl">رمز عبور</label><input type="password" class="fi" id="pw" name="password" autocomplete="current-password" placeholder="****" required></div>
 <div class="rr"><input type="checkbox" id="rm" checked><label for="rm">مرا به خاطر بسپار</label></div>
-<button class="lb" type="submit">ورود به حساب</button>
+<button class="lb" type="submit" id="loginSubmitBtn">ورود به حساب</button>
 </form>
 <a class="ig-link" href="https://instagram.com/omid.fard.sw" target="_blank">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
@@ -262,58 +262,76 @@ td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bot
 </div>
 <div class="update-toast" id="updateToast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span id="updateToastText">اطلاعات صندوق به‌روزرسانی شد</span></div>
 <script>
-const SID='1E8OVNRGvyKmyDBnghSjaIMGS6m0K-NtIqrL9KEB1kTM';
-let D={members:[],ledger:[],loans:[],payments:[],time:[]},U=null;
+// آدرس Web App - همان اسکریپتی که در Apps Script دیپلوی می‌کنید (Code.gs جدید)
+const API_URL='https://script.google.com/macros/s/AKfycbxYCzkP4GyfFuAPcI82q-WqgUObQK0hCK5hfAFKeGh00B37bqmRozFVaQZ-bALf3mggWg/exec';
+let D={members:[],ledger:[],loans:[],payments:[],time:[],time_h:[],notice_text:'',update_date:''},U=null;
 let currentView={fn:null,args:[]};
 
-function cellVal(cell){
-if(!cell) return '';
-if(cell.f) return cell.f;
-if(cell.v===null||cell.v===undefined) return '';
-return cell.v;
+function apiCall(params){
+const body=new URLSearchParams(params);
+return fetch(API_URL,{method:'POST',body:body}).then(function(r){return r.text();}).then(function(txt){
+try{return JSON.parse(txt);}catch(e){
+console.error('پاسخ خام سرور (JSON نیست):',txt);
+return {success:false,message:'پاسخ سرور نامعتبر است'};
+}
+});
 }
 
-function loadSheet(n,cb){
-const cn='cb_'+n+'_'+Date.now();
-const sheetName=(n==='time')?'Time':n;
-const extra=(n==='time')?'&headers=0':'';
-const url=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=responseHandler:${cn}&sheet=${sheetName}${extra}`;
-window[cn]=function(r){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);
-if(r.status==='error'){cb(null,r.errors);return}
-const t=r.table,h=t.cols.map(c=>c.label||c.id);
-const rows=t.rows.map(row=>{const o={};row.c.forEach((c,i)=>{if(h[i])o[h[i]]=cellVal(c);});return o;});cb(rows, null, h);};
-const sc=document.createElement('script');sc.src=url;
-sc.onerror=function(){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);cb(null,'err');};
-document.body.appendChild(sc);}
+function applyServerData(payload){
+D.members=payload.members||[];
+D.ledger=payload.ledger||[];
+D.loans=payload.loans||[];
+D.payments=payload.payments||[];
+D.time=payload.time||[];
+D.time_h=payload.time_h||[];
+D.notice_text=payload.notice_text||'';
+D.update_date=normDate(payload.update_date)||String(payload.update_date||'').trim();
+norm();
+}
 
-function loadNoticeCell(cb){
-const cn='cb_notice_'+Date.now();
-const url=`https://docs.google.com/spreadsheets/d/${SID}/gviz/tq?tqx=responseHandler:${cn}&sheet=Time&range=B1&headers=0`;
-window[cn]=function(r){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);
-if(r.status==='error'){cb('');return;}
-let val='';
-try{const t=r.table;if(t.rows&&t.rows[0]&&t.rows[0].c&&t.rows[0].c[0]){val=cellVal(t.rows[0].c[0]);}}catch(e){}
-cb(String(val||'').trim());};
-const sc=document.createElement('script');sc.src=url;
-sc.onerror=function(){delete window[cn];if(sc.parentNode)sc.parentNode.removeChild(sc);cb('');};
-document.body.appendChild(sc);}
-
-function loadAll(){
-const sheets=['members','ledger','loans','payments','time'];let done=0,err=false,noticeDone=false;
-D.notice_text='';
-function checkDone(){if(err)return;if(done===5&&noticeDone){norm();document.getElementById('lo').classList.add('h');autoLogin();}}
-loadNoticeCell(function(v){D.notice_text=v;noticeDone=true;checkDone();});
-sheets.forEach(s=>{loadSheet(s,(rows,e,h)=>{if(err)return;
-if(e){err=true;document.getElementById('lo').innerHTML='<div class="eb"><p>خطا در بارگذاری "'+s+'"</p><p style="margin-top:8px;font-size:.75rem">مطمئن شوید شیت دسترسی عمومی دارد</p></div>';return;}
-D[s]=rows;
-D[s+'_h']=h;
-done++;checkDone();});});}
-
+function normDate(v){
+// برخی مقادیر تاریخ به‌جای متن ساده «۱۴۰۳/۱۱/۱۳» به‌صورت رشته‌ی ISO خراب
+// «۱۴۰۳-۱۱-۱۳T00:00:00.000Z» از سرور برمی‌گردند (چون سلول گوگل‌شیت به‌عنوان
+// آبجکت Date خوانده شده). این تابع فرمت را به «Y/M/D» یکسان‌سازی می‌کند
+// تا محاسبات و مقایسه‌های تاریخ درست کار کنند.
+// نکته: اگر عدد سال بزرگ‌تر از ۱۷۰۰ باشد یعنی این یک تاریخ واقعاً میلادی است
+// (مثل زمان واقعی «آخرین به‌روزرسانی») و باید با تقویم شمسی محاسبه شود؛
+// در غیر این صورت خود عدد سال از قبل شمسی بوده و فقط جداکننده تغییر می‌کند.
+if(v===null||v===undefined)return'';
+let s=String(v).trim();
+if(!s)return'';
+// فرمت خروجی toString جاوااسکریپت، مثل «Thu Apr 25 1405 03:25:44 GMT+0325 (...)»
+// که گاهی سرور برای فیلد «تاریخ به‌روزرسانی» می‌فرستد (چون سلول شمسی به‌اشتباه
+// به‌عنوان Date میلادی خوانده و بدون تبدیل، متن آن گرفته شده است).
+const MONTHS={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+const tm=s.match(/^\w+\s+(\w{3})\s+(\d{1,2})\s+(\d{3,4})/);
+if(tm&&MONTHS[tm[1]]){
+const y2=Number(tm[3]);
+if(y2<=1700)return y2+'/'+String(MONTHS[tm[1]]).padStart(2,'0')+'/'+String(Number(tm[2])).padStart(2,'0');
+}
+const m=s.match(/^(\d{3,4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+if(!m)return s;
+const y=Number(m[1]),mo=Number(m[2]),d=Number(m[3]);
+if(y>1700){
+try{
+const dt=new Date(s);
+if(!isNaN(dt.getTime())){
+const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(dt);
+const gy=+parts.find(p=>p.type==='year').value;
+const gm=+parts.find(p=>p.type==='month').value;
+const gd=+parts.find(p=>p.type==='day').value;
+const[jy,jm,jd]=gregorianToJalali(gy,gm,gd);
+return jy+'/'+String(jm).padStart(2,'0')+'/'+String(jd).padStart(2,'0');
+}
+}catch(e){}
+}
+return y+'/'+String(mo).padStart(2,'0')+'/'+String(d).padStart(2,'0');
+}
 function norm(){
-D.members.forEach(r=>{r.member_id=Number(r.member_id)||0;r.name=String(r.name||'').trim();r.phone=String(r.phone||'').trim();r.password=String(r.password||'').trim();r.group_id=String(r.group_id||'').trim();r.role=String(r.role||'').trim().toLowerCase();});
-D.ledger.forEach(r=>{r.member_id=Number(r.member_id)||0;r.date=String(r.date||'').trim();r.description=String(r.description||'').trim();r.debit=Number(r.debit)||0;r.credit=Number(r.credit)||0;});
-D.loans.forEach(r=>{r.member_id=Number(r.member_id)||0;r.loan_id=String(r.loan_id||'').trim();r.savings=Number(r['Savings balance'])||0;r.outstanding=Number(r['Outstanding loan balance'])||0;r.amount=Number(r.amount)||0;r.installments=Number(r.installments)||0;r.start_date=String(r.start_date||'').trim();});
-D.payments.forEach(r=>{r.loan_id=String(r.loan_id||'').trim();r.nam=String(r.nam||'').trim();r.installment_no=Number(r.installment_no)||0;r.amount=Number(r.amount)||0;r.due_date=String(r.due_date||'').trim();r.amount_paid=Number(r['amount paid'])||0;r.paid_date=String(r.paid_date||'').trim();});}
+D.members.forEach(r=>{r.member_id=Number(r.member_id)||0;r.name=String(r.name||'').trim();r.phone=String(r.phone||'').trim();r.group_id=String(r.group_id||'').trim();r.role=String(r.role||'').trim().toLowerCase();});
+D.ledger.forEach(r=>{r.member_id=Number(r.member_id)||0;r.date=normDate(r.date);r.description=String(r.description||'').trim();r.debit=Number(r.debit)||0;r.credit=Number(r.credit)||0;});
+D.loans.forEach(r=>{r.member_id=Number(r.member_id)||0;r.loan_id=String(r.loan_id||'').trim();r.savings=Number(r['Savings balance'])||0;r.outstanding=Number(r['Outstanding loan balance'])||0;r.amount=Number(r.amount)||0;r.installments=Number(r.installments)||0;r.start_date=normDate(r.start_date);});
+D.payments.forEach(r=>{r.loan_id=String(r.loan_id||'').trim();r.nam=String(r.nam||'').trim();r.installment_no=Number(r.installment_no)||0;r.amount=Number(r.amount)||0;r.due_date=normDate(r.due_date);r.amount_paid=Number(r['amount paid'])||0;r.paid_date=normDate(r.paid_date);});}
 
 function showUpdateToast(msg){
 const el=document.getElementById('updateToast');
@@ -324,30 +342,37 @@ clearTimeout(el._hideT);
 el._hideT=setTimeout(()=>{el.classList.remove('show');},4000);
 }
 
+function getStoredToken(){try{return localStorage.getItem('sf_tok');}catch(e){return null;}}
+function setStoredToken(tok,remember){try{
+if(remember){localStorage.setItem('sf_tok',tok);localStorage.setItem('sf_r','1');}
+else{localStorage.setItem('sf_tok',tok);localStorage.removeItem('sf_r');}
+}catch(e){}}
+function clearStoredToken(){try{localStorage.removeItem('sf_tok');localStorage.removeItem('sf_r');}catch(e){}}
+
+function initApp(){
+const tok=getStoredToken();
+if(!tok){document.getElementById('lo').classList.add('h');showLogin();return;}
+apiCall({action:'getData',token:tok}).then(function(res){
+document.getElementById('lo').classList.add('h');
+if(res&&res.success){U=res.user;applyServerData(res.data);showLoginAlert();}
+else{clearStoredToken();showLogin();}
+}).catch(function(){document.getElementById('lo').classList.add('h');showLogin();});
+}
+
 function silentReload(){
 if(!U)return; // فقط وقتی کاربر وارد شده، بروزرسانی خاموش انجام شود
 if(document.getElementById('app').style.display!=='block')return;
-const sheets=['members','ledger','loans','payments','time'];
-let done=0,err=false,noticeDone=false;
-const newD={};
-function finish(){
-if(err)return;
-if(done!==5||!noticeDone)return;
+const tok=getStoredToken();
+if(!tok)return;
+apiCall({action:'getData',token:tok}).then(function(res){
+if(!res||!res.success)return; // در صورت خطا یا انقضای نشست، اطلاعات فعلی دست‌نخورده باقی می‌ماند
 const prevCounts=[D.members.length,D.ledger.length,D.loans.length,D.payments.length,D.time.length];
-D=newD;
-norm();
+applyServerData(res.data);
 const newCounts=[D.members.length,D.ledger.length,D.loans.length,D.payments.length,D.time.length];
 const changed=prevCounts.some((c,i)=>c!==newCounts[i]);
 if(currentView.fn){try{currentView.fn.apply(null,currentView.args);}catch(e){}}
 if(changed)showUpdateToast('اطلاعات جدیدی در صندوق ثبت شده است');
-}
-loadNoticeCell(function(v){newD.notice_text=v;noticeDone=true;finish();});
-sheets.forEach(s=>{loadSheet(s,(rows,e,h)=>{
-if(err)return;
-if(e){err=true;return;} // در صورت خطا، اطلاعات فعلی دست‌نخورده باقی می‌ماند
-newD[s]=rows;newD[s+'_h']=h;
-done++;finish();
-});});
+}).catch(function(){});
 }
 setInterval(silentReload,5*60*1000); // بروزرسانی خودکار هر ۵ دقیقه
 
@@ -391,21 +416,10 @@ const installAmt=Math.round(loan.amount/loan.installments);
 const saving10=Math.round(installAmt*0.1);
 return{overdue:od.length,overdueAmt:od.reduce((s,p)=>s+p.amount,0),installAmt,saving10,totalDue:installAmt+saving10};}
 
-function autoLogin(){try{const p=localStorage.getItem('sf_p'),w=localStorage.getItem('sf_w'),r=localStorage.getItem('sf_r');
-if(r==='1'&&p&&w){const u=D.members.find(m=>m.phone&&m.password&&m.phone===p&&m.password===w);if(u){U=u;showLoginAlert();return;}}}catch(e){}showLogin();}
-
-function showLogin(){document.getElementById('lp').style.display='flex';
-try{const p=localStorage.getItem('sf_p'),w=localStorage.getItem('sf_w'),r=localStorage.getItem('sf_r');
-if(r==='1'&&p){document.getElementById('ph').value=p;if(w)document.getElementById('pw').value=w;document.getElementById('rm').checked=true;}}catch(e){}}
+function showLogin(){document.getElementById('lp').style.display='flex';}
 
 function showLoginAlert() {
-    let updateDate = '';
-    if (D.time_h && D.time_h[0] && D.time_h[0] !== 'A' && !D.time_h[0].startsWith('id:')) {
-        updateDate = D.time_h[0];
-    } else if (D.time && D.time.length > 0) {
-        updateDate = Object.values(D.time[0])[0];
-    }
-    if (!updateDate) updateDate = 'نامشخص';
+    let updateDate = String(D.update_date||'').trim() || 'نامشخص';
 
     let noticeBox = document.getElementById('modalNoticeBox');
     let noticeText = String(D.notice_text || '').trim();
@@ -452,14 +466,35 @@ showOverview();}
 
 function login(){const p=document.getElementById('ph').value.trim(),w=document.getElementById('pw').value.trim(),r=document.getElementById('rm').checked;
 if(!p||!w){document.getElementById('le').innerHTML='لطفاً شماره موبایل و رمز عبور را وارد کنید<br><small>هر دو فیلد الزامی است</small>';document.getElementById('le').style.display='block';return;}
-const u=D.members.find(m=>m.phone&&m.password&&m.phone===p&&m.password===w);
-if(!u){document.getElementById('le').innerHTML='شماره موبایل یا رمز عبور اشتباه است<br><small>توجه: اعداد را به صورت انگلیسی وارد کنید</small>';document.getElementById('le').style.display='block';return;}
 document.getElementById('le').style.display='none';
-try{if(r){localStorage.setItem('sf_p',p);localStorage.setItem('sf_w',w);localStorage.setItem('sf_r','1');}
-else{localStorage.removeItem('sf_p');localStorage.removeItem('sf_w');localStorage.removeItem('sf_r');}}catch(e){}
-U=u;
+const btn=document.getElementById('loginSubmitBtn');
+const prevLabel=btn?btn.innerHTML:'';
+if(btn){btn.disabled=true;btn.innerHTML='در حال ورود...';}
+apiCall({action:'login',phone:p,password:w,remember:r?'1':'0'}).then(function(res){
+if(!res||!res.success){
+if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
+document.getElementById('le').innerHTML=(res&&res.message)?res.message:'شماره موبایل یا رمز عبور اشتباه است<br><small>توجه: اعداد را به صورت انگلیسی وارد کنید</small>';
+document.getElementById('le').style.display='block';
+return;
+}
+setStoredToken(res.token,r);
+return apiCall({action:'getData',token:res.token}).then(function(dres){
+if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
+if(!dres||!dres.success){
+document.getElementById('le').innerHTML='خطا در دریافت اطلاعات. دوباره تلاش کنید';
+document.getElementById('le').style.display='block';
+return;
+}
+U=res.user;
+applyServerData(dres.data);
 saveCredentialToBrowser(p,w);
 showLoginAlert();
+});
+}).catch(function(){
+if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
+document.getElementById('le').innerHTML='ارتباط با سرور برقرار نشد. اتصال اینترنت را بررسی کنید';
+document.getElementById('le').style.display='block';
+});
 }
 
 function saveCredentialToBrowser(username, password){
@@ -488,10 +523,15 @@ function saveCredentialToBrowser(username, password){
     }catch(e){}
 }
 
-function logout(){U=null;document.getElementById('app').style.display='none';document.getElementById('lp').style.display='flex';document.getElementById('le').style.display='none';}
+function logout(){
+const tok=getStoredToken();
+if(tok)apiCall({action:'logout',token:tok}).catch(function(){});
+clearStoredToken();
+U=null;D={members:[],ledger:[],loans:[],payments:[],time:[],time_h:[],notice_text:'',update_date:''};
+document.getElementById('app').style.display='none';document.getElementById('lp').style.display='flex';document.getElementById('le').style.display='none';
+}
 
 /* ===== تغییر رمز عبور ===== */
-const CHANGE_PW_URL='https://script.google.com/macros/s/AKfycbyTPOPZM847V-a6bI_IvfJM10kgbSjFiv_J_3KPLzq7Vq5Y0SoGGPg8S_-caqQcilr_uQ/exec';
 
 function toggleEye(inputId,btn){
 const inp=document.getElementById(inputId);
@@ -542,7 +582,6 @@ const newPw2=document.getElementById('cpwNew2').value.trim();
 document.getElementById('cpwAlert').style.display='none';
 
 if(!oldPw||!newPw||!newPw2){cpwShowError('لطفاً همه فیلدها را پر کنید');return;}
-if(oldPw!==U.password){cpwShowError('رمز عبور فعلی صحیح نیست');return;}
 if(newPw.length<4){cpwShowError('رمز عبور جدید باید حداقل ۴ کاراکتر باشد');return;}
 if(newPw!==newPw2){cpwShowError('تکرار رمز عبور جدید مطابقت ندارد');return;}
 if(newPw===oldPw){cpwShowError('رمز عبور جدید نمی‌تواند با رمز فعلی یکسان باشد');return;}
@@ -551,32 +590,14 @@ const btn=document.getElementById('cpwSubmitBtn');
 btn.disabled=true;
 btn.innerHTML='<span class="cpw-spin"></span>در حال ثبت...';
 
-const body=new URLSearchParams();
-body.set('action','changePassword');
-body.set('phone',U.phone);
-body.set('oldPassword',oldPw);
-body.set('newPassword',newPw);
+const tok=getStoredToken();
 
-fetch(CHANGE_PW_URL,{method:'POST',body:body})
-.then(function(r){return r.text();})
-.then(function(txt){
+apiCall({action:'changePassword',token:tok,oldPassword:oldPw,newPassword:newPw})
+.then(function(res){
 btn.disabled=false;
 btn.innerHTML='ثبت رمز جدید';
-let res=null;
-try{res=JSON.parse(txt);}catch(parseErr){
-console.error('پاسخ خام سرور (غیر JSON):',txt);
-cpwShowError('پاسخ سرور نامعتبر است. احتمالاً کد Apps Script با نسخه جدید Deploy نشده (Deploy > Manage deployments > ویرایش > New version).');
-return;
-}
 if(res&&res.success){
-const mrec=D.members.find(m=>m.member_id===U.member_id);
-if(mrec)mrec.password=newPw;
 saveCredentialToBrowser(U.phone,newPw);
-try{
-localStorage.removeItem('sf_p');
-localStorage.removeItem('sf_w');
-localStorage.removeItem('sf_r');
-}catch(e){}
 document.getElementById('cpwFormWrap').style.display='none';
 document.getElementById('cpwSuccessWrap').style.display='block';
 window._cpwAutoLogoutT=setTimeout(finishChangePwAndLogout,4000);
@@ -877,8 +898,8 @@ const nm=String(names[i]||'').trim();
 if(!nm)continue;
 hasAny=true;
 const amt=amounts[i]?fmt(Number(amounts[i])||0)+' ریال':'—';
-const rd=String(reqDates[i]||'').trim()||'—';
-const gd=String(giveDates[i]||'').trim()||'—';
+const rd=normDate(reqDates[i])||'—';
+const gd=normDate(giveDates[i])||'—';
 reqRows+='<tr><td>'+nm+'</td><td>'+amt+'</td><td>'+rd+'</td><td>'+gd+'</td></tr>';
 }
 if(hasAny){h+='<div class="tw"><table><thead><tr><th>نام متقاضی</th><th>مبلغ درخواستی</th><th>تاریخ درخواست</th><th>تاریخ تحویل فرم</th></tr></thead><tbody>'+reqRows+'</tbody></table></div>';}
@@ -888,7 +909,7 @@ h+='</section>';
 h+=footerHtml();
 document.getElementById('mc').innerHTML=h;}
 
-loadAll();
+initApp();
 </script>
 </body>
 </html>
