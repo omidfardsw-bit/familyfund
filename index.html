@@ -127,7 +127,7 @@ td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bot
 .fn a{color:var(--t2);text-decoration:none}.fn a:hover{color:var(--pri)}
 
 /* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:none;align-items:center;justify-content:center;z-index:10000;padding:24px;backdrop-filter:blur(4px)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:none;align-items:center;justify-content:center;z-index:10000;padding:24px;backdrop-filter:blur(4px);overflow-y:auto}
 .modal-box{background:var(--sfr);border-radius:20px;padding:34px;width:100%;max-width:420px;box-shadow:0 24px 60px rgba(0,0,0,0.1);text-align:center;border:1px solid var(--bd);animation:modalIn .35s var(--eo) both}
 @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-icon{width:50px;height:50px;background:var(--pri-l);color:var(--pri);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid var(--pri-border)}
@@ -147,6 +147,9 @@ td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bot
 .modal-btn{background:linear-gradient(135deg,var(--pri),#16a34a);color:white;border:none;padding:13px 24px;border-radius:10px;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;width:100%;transition:all .25s var(--eo);box-shadow:0 2px 10px rgba(21,128,61,0.2)}.modal-btn:hover{box-shadow:0 6px 20px rgba(21,128,61,0.28);transform:translateY(-1px)}
 .modal-btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
 .modal-btn-ghost{background:var(--sf);color:var(--t2);border:1px solid var(--bd);padding:13px 24px;border-radius:10px;font-family:inherit;font-size:.9rem;font-weight:500;cursor:pointer;width:100%;margin-top:10px;transition:all .2s}.modal-btn-ghost:hover{border-color:var(--pri);color:var(--pri)}
+.modal-box-tall{max-height:88vh;display:flex;flex-direction:column}
+.modal-scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto;min-height:0;margin-bottom:6px}
+.modal-btn{flex-shrink:0}
 
 /* Change Password Panel */
 .cpw-box{text-align:right}
@@ -231,11 +234,13 @@ td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bot
 </div></div>
 
 <div class="modal-overlay" id="loginModal">
-    <div class="modal-box">
-        <div class="modal-text" id="modalDateText"></div>
-        <div class="modal-alert" id="modalAlertBox"></div>
-        <div class="modal-notice" id="modalNoticeBox"></div>
-        <div class="modal-req" id="modalReqBox"></div>
+    <div class="modal-box modal-box-tall">
+        <div class="modal-scroll">
+            <div class="modal-text" id="modalDateText"></div>
+            <div class="modal-alert" id="modalAlertBox"></div>
+            <div class="modal-notice" id="modalNoticeBox"></div>
+            <div class="modal-req" id="modalReqBox"></div>
+        </div>
         <button class="modal-btn" onclick="confirmLoginModal()">متوجه شدم، ورود به سیستم</button>
     </div>
 </div>
