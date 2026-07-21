@@ -58,8 +58,10 @@ body{font-family:'Vazirmatn',system-ui,sans-serif;background:var(--sf);color:var
 .bo{padding:7px 15px;background:var(--er-bg);color:var(--er);border:1px solid #fecaca;border-radius:9px;font-family:inherit;font-size:.76rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .2s}.bo:hover{background:#fee2e2;transform:translateY(-1px)}
 .mn{max-width:1100px;margin:0 auto;padding:28px 24px 64px}
 
-/* Back Button */
-.bb{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:var(--sfr);border:1px solid var(--bd);border-radius:10px;font-family:inherit;font-size:.82rem;color:var(--t2);cursor:pointer;margin-bottom:24px;transition:all .25s var(--eo)}.bb:hover{border-color:var(--pri);color:var(--pri);transform:translateX(3px)}
+/* Back Button - شناور (fixed) تا کاربر برای دسترسی به آن مجبور به اسکرول به بالای صفحه نشود */
+.bb{position:fixed;bottom:22px;left:22px;display:inline-flex;align-items:center;gap:6px;padding:11px 18px;background:var(--sfr);border:1px solid var(--bd);border-radius:50px;font-family:inherit;font-size:.82rem;color:var(--t2);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.12);transition:all .25s var(--eo);z-index:500}.bb:hover{border-color:var(--pri);color:var(--pri);transform:translateY(-2px)}
+@media(max-width:640px){.bb{bottom:16px;left:16px;padding:9px 14px;font-size:.78rem}}
+@media print{.bb{display:none!important}}
 
 /* Summary Bar */
 .gt{background:linear-gradient(135deg,var(--pri-l),#ecfdf5);border:1px solid var(--pri-border);border-radius:var(--r);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:28px}
@@ -69,9 +71,10 @@ body{font-family:'Vazirmatn',system-ui,sans-serif;background:var(--sf);color:var
 .mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:32px}
 .mc{background:var(--sfr);border:1px solid var(--bd);border-radius:var(--r);padding:20px 24px;cursor:pointer;transition:all .3s var(--eo);box-shadow:0 1px 3px rgba(0,0,0,0.03)}
 .mc:hover{transform:translateY(-3px);border-color:var(--pri-border);box-shadow:0 8px 24px rgba(21,128,61,0.07)}
-.mh{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.mh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
 .ma{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--pri-l),#dcfce7);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.88rem;color:var(--pri);border:1px solid var(--pri-border)}
 .mna{font-weight:600;font-size:.92rem}.mr{font-size:.72rem;color:var(--t3);margin-top:1px}
+.mnd{text-align:left}.mndl{font-size:.66rem;color:var(--t3);margin-bottom:2px}.mndv{font-size:.8rem;font-weight:600;color:var(--t1)}
 .ms{display:grid;grid-template-columns:1fr 1fr;gap:10px}.msl{font-size:.68rem;color:var(--t3);margin-bottom:1px}.msv{font-size:.88rem;font-weight:600}
 .msv.p{color:var(--ok)}.msv.n{color:var(--er)}.msv.z{color:var(--t3)}.msv.w{color:var(--wn)}
 
@@ -289,7 +292,7 @@ td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bot
 </div>
 
 <div class="app" id="app">
-<header class="hd"><h1>صندوق قرض‌الحسنه خانوادگی</h1><div class="ha"><span class="hu" id="hun"></span><button class="bo" id="mgmtBtn" style="display:none;background:var(--pri-l);color:var(--pri);border-color:var(--pri-border)" onclick="showManagementReports()">گزارشات مدیریتی</button><button class="bo" style="background:var(--pri-l);color:var(--pri);border-color:var(--pri-border)" onclick="openChangePw()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>تغییر رمز</button><button class="bo" onclick="logout()">خروج</button></div></header>
+<header class="hd"><h1>صندوق قرض‌الحسنه خانوادگی</h1><div class="ha"><span class="hu" id="hun"></span><button class="bo" id="mgmtBtn" style="display:none;background:var(--pri-l);color:var(--pri);border-color:var(--pri-border)" onclick="navigateTo(showManagementReports,[])">گزارشات مدیریتی</button><button class="bo" style="background:var(--pri-l);color:var(--pri);border-color:var(--pri-border)" onclick="openChangePw()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>تغییر رمز</button><button class="bo" onclick="logout()">خروج</button></div></header>
 <main class="mn" id="mc"></main>
 </div>
 <div class="update-toast" id="updateToast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg><span id="updateToastText">اطلاعات صندوق به‌روزرسانی شد</span></div>
@@ -300,6 +303,22 @@ td{padding:11px 14px;border-bottom:1px solid #eef2ef}tr:last-child td{border-bot
 const API_URL='https://script.google.com/macros/s/AKfycbxYCzkP4GyfFuAPcI82q-WqgUObQK0hCK5hfAFKeGh00B37bqmRozFVaQZ-bALf3mggWg/exec';
 let D={members:[],ledger:[],loans:[],payments:[],time:[],time_h:[],notice_text:'',update_date:'',loan_notifications:[]},U=null;
 let currentView={fn:null,args:[]};
+
+/* ===== پشته‌ی بازگشت (Back Stack) =====
+   هر بار که کاربر از یک صفحه به صفحه‌ی دیگر می‌رود (با navigateTo)، صفحه‌ی فعلی و موقعیت
+   اسکرول آن ذخیره می‌شود؛ با زدن دکمه‌ی بازگشت (goBack) دقیقاً همان صفحه با همان موقعیت
+   اسکرول قبلی بازسازی می‌شود، بدون نیاز به اسکرول کاربر به بالای صفحه. */
+let backStack=[];
+function navigateTo(fn,args){
+backStack.push({fn:currentView.fn,args:currentView.args,scroll:window.scrollY||window.pageYOffset||0});
+fn.apply(null,args||[]);
+}
+function goBack(){
+const prev=backStack.pop();
+const targetScroll=prev?(prev.scroll||0):0;
+if(prev&&prev.fn){prev.fn.apply(null,prev.args||[]);}else{showOverview();}
+requestAnimationFrame(function(){requestAnimationFrame(function(){window.scrollTo(0,targetScroll);});});
+}
 
 function apiCall(params){
 const body=new URLSearchParams(params);
@@ -384,10 +403,31 @@ else{localStorage.setItem('sf_tok',tok);localStorage.removeItem('sf_r');}
 }catch(e){}}
 function clearStoredToken(){try{localStorage.removeItem('sf_tok');localStorage.removeItem('sf_r');}catch(e){}}
 
+/* ===== تشخیص نوع دستگاه (برای ثبت در شیت لاگ ورود) ===== */
+function detectDevice(){
+try{
+const ua=navigator.userAgent||'';
+const isAndroid=/Android/i.test(ua);
+const isIOS=/iPhone|iPad|iPod/i.test(ua);
+const isWindows=/Windows/i.test(ua);
+const isMac=/Macintosh|Mac OS X/i.test(ua)&&!isIOS;
+const isLinux=/Linux/i.test(ua)&&!isAndroid;
+let os='نامشخص';
+if(isAndroid)os='اندروید';
+else if(isIOS)os='آیفون/آیپد';
+else if(isWindows)os='ویندوز';
+else if(isMac)os='مک';
+else if(isLinux)os='لینوکس';
+const isMobile=/Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+return (isMobile?'موبایل':'کامپیوتر')+' - '+os;
+}catch(e){return 'نامشخص';}
+}
+
 function initApp(){
 const tok=getStoredToken();
 if(!tok){document.getElementById('lo').classList.add('h');showLogin();return;}
-apiCall({action:'getData',token:tok}).then(function(res){
+// entry:'1' یعنی این یک ورود واقعی به برنامه است (نه رفرش خاموش پس‌زمینه)، تا سمت سرور در شیت لاگ ثبت شود
+apiCall({action:'getData',token:tok,entry:'1',device:detectDevice()}).then(function(res){
 document.getElementById('lo').classList.add('h');
 if(res&&res.success){U=res.user;applyServerData(res.data);showLoginAlert();}
 else{clearStoredToken();showLogin();}
@@ -521,7 +561,7 @@ document.getElementById('le').style.display='none';
 const btn=document.getElementById('loginSubmitBtn');
 const prevLabel=btn?btn.innerHTML:'';
 if(btn){btn.disabled=true;btn.innerHTML='در حال ورود...';}
-apiCall({action:'login',phone:p,password:w,remember:r?'1':'0'}).then(function(res){
+apiCall({action:'login',phone:p,password:w,remember:r?'1':'0',device:detectDevice()}).then(function(res){
 if(!res||!res.success){
 if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
 document.getElementById('le').innerHTML=(res&&res.message)?res.message:'شماره موبایل یا رمز عبور اشتباه است<br><small>توجه: اعداد را به صورت انگلیسی وارد کنید</small>';
@@ -761,7 +801,12 @@ let h=`<div class="gt">
 h+='<div class="mg">';
 gm.forEach(m=>{const l=getLoan(m.member_id);const sv=l?l.savings:0;const ob=l?l.outstanding:0;
 const st=getMemberStats(m.member_id);
-h+=`<div class="mc" onclick="showDetail(${m.member_id})"><div class="mh"><div class="ma">${ini(m.name)}</div><div><div class="mna">${m.name}</div><div class="mr">${m.role==='leader'?'سرگروه':'عضو'}</div></div></div>
+const nextDuePay=(l&&l.loan_id)?getPay(l.loan_id).filter(p=>p.amount_paid===0).sort((a,b)=>a.due_date.localeCompare(b.due_date))[0]:null;
+const nextDueText=nextDuePay?toFa(nextDuePay.due_date):'—';
+h+=`<div class="mc" onclick="navigateTo(showDetail,[${m.member_id}])"><div class="mh">
+<div><div class="mna">${m.name}</div><div class="mr">${m.role==='leader'?'سرگروه':'عضو'}</div></div>
+<div class="mnd"><div class="mndl">نزدیک‌ترین سررسید قسط</div><div class="mndv">${nextDueText}</div></div>
+</div>
 <div class="ms">
 <div><div class="msl">مانده حساب</div><div class="msv p">${fmt(sv)}</div></div>
 <div><div class="msl">مانده بدهی وام</div><div class="msv ${ob>0?'n':'z'}">${fmt(ob)}</div></div>
@@ -781,13 +826,17 @@ const loan=getLoan(mid);
 const sv=loan?loan.savings:0;const ob=loan?loan.outstanding:0;
 const st=getMemberStats(mid);
 const back=fromMgmt||(isLead(U.role)&&grp(U.group_id).length>1);
+// نزدیک‌ترین تاریخ سررسید قسطی که عضو هنوز پرداخت نکرده (نزدیک‌ترین قسط پیش‌رو، فارغ از معوق یا آینده بودن)
+const nextDuePay=(loan&&loan.loan_id)?getPay(loan.loan_id).filter(p=>p.amount_paid===0).sort((a,b)=>a.due_date.localeCompare(b.due_date))[0]:null;
+const nextDueText=nextDuePay?toFa(nextDuePay.due_date):'—';
 let h='';
-if(back)h+=`<button class="bb" onclick="${fromMgmt?'showManagementReports()':'showOverview()'}">← بازگشت</button>`;
+if(back)h+=`<button class="bb" onclick="goBack()">← بازگشت</button>`;
 h+=`<div class="dh"><div class="dn">${m.name}</div></div>
 <div class="su">
 <div class="si hl"><div class="sl">مانده حساب پس‌انداز</div><div class="sv p">${fmt(sv)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
 <div class="si"><div class="sl">مانده بدهی وام</div><div class="sv w">${fmt(ob)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
 <div class="si"><div class="sl">اقساط معوق</div><div class="sv er">${st.overdue>0?st.overdue.toLocaleString('fa-IR')+' قسط ('+fmt(st.overdueAmt)+')':'—'}</div></div>
+<div class="si"><div class="sl">نزدیک‌ترین سررسید قسط</div><div class="sv">${nextDueText}</div></div>
 <div class="si"><div class="sl">مبلغ قسط</div><div class="sv">${fmt(st.installAmt)}</div></div>
 <div class="si"><div class="sl">پس‌انداز اجباری (۱۰٪)</div><div class="sv">${fmt(st.saving10)}</div></div>
 <div class="si"><div class="sl">جمع واریزی ماهانه</div><div class="sv w">${fmt(st.totalDue)} <small style="font-size:.6rem;font-weight:400">ریال</small></div></div>
@@ -809,8 +858,24 @@ h+=`<div class="lp2"><div class="li"><span class="lti">وام ${fmt(loan.amount)
 <span>تاریخ شروع وام: <b style="color:var(--t1)">${startDateFa}</b></span>
 <span>پیشرفت: <b style="color:var(--t1)">${toFa(pct)}%</b></span>
 <span>تاریخ پایان وام: <b style="color:var(--pri)">${loanEndDate}</b></span>
-</div></div>
-<section class="sc" id="installmentBookPrintArea"><div class="sh"><h2 class="st">دفتر اقساط</h2>
+</div></div>`;
+h+=installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate);}
+
+if(ml.length>0){
+h+=`<section class="sc"><div class="sh"><h2 class="st">صورتحساب</h2></div>
+<div class="tw"><table><thead><tr><th>ردیف</th><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>`;
+ml.forEach((r,i)=>{h+=`<tr><td>${(i+1).toLocaleString('fa-IR')}</td><td>${toFa(r.date)}</td><td>${r.description}</td>
+<td class="ad">${r.debit>0?fmt(r.debit):'—'}</td><td class="ac">${r.credit>0?fmt(r.credit):'—'}</td></tr>`;});
+h+=`</tbody></table>
+<div class="bx"><span class="bxl">مانده صورتحساب:</span><span class="bxv" style="color:var(--ok)">${fmt(sv)} ریال</span></div></div></section>`;}
+
+h+=bankHtml();
+h+=footerHtml();
+document.getElementById('mc').innerHTML=h;}
+
+/* ===== ساخت بخش «دفتر اقساط» (قابل استفاده در صفحه‌ی جزئیات عضو و در نمایش تکی از لیست معوقی‌ها) ===== */
+function installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate){
+let h=`<section class="sc" id="installmentBookPrintArea"><div class="sh"><h2 class="st">دفتر اقساط</h2>
 <div style="display:flex;gap:8px" class="no-print">
 <button class="bo" style="background:var(--pri-l);color:var(--pri);border-color:var(--pri-border)" onclick="generateInstallmentImage(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>خروجی تصویر</button>
 </div>
@@ -822,16 +887,26 @@ const paid=p.amount_paid>0;const overdue=!paid&&p.due_date<=getCutoffDate();
 const cls=paid?'sp2':overdue?'spe':'su2';const txt=paid?'پرداخت شده':overdue?'معوق':'آینده';
 h+=`<tr><td>${p.installment_no.toLocaleString('fa-IR')}</td><td>${fmt(p.amount)}</td><td>${toFa(p.due_date)}</td>
 <td>${p.paid_date?toFa(p.paid_date):'—'}</td><td><span class="sb ${cls}">${txt}</span></td></tr>`;});
-h+=`</tbody></table></div></section>`;}
+h+=`</tbody></table></div></section>`;
+return h;
+}
 
-if(ml.length>0){
-h+=`<section class="sc"><div class="sh"><h2 class="st">صورتحساب</h2></div>
-<div class="tw"><table><thead><tr><th>ردیف</th><th>تاریخ</th><th>شرح</th><th>بدهکار</th><th>بستانکار</th></tr></thead><tbody>`;
-ml.forEach((r,i)=>{h+=`<tr><td>${(i+1).toLocaleString('fa-IR')}</td><td>${toFa(r.date)}</td><td>${r.description}</td>
-<td class="ad">${r.debit>0?fmt(r.debit):'—'}</td><td class="ac">${r.credit>0?fmt(r.credit):'—'}</td></tr>`;});
-h+=`</tbody></table>
-<div class="bx"><span class="bxl">مانده صورتحساب:</span><span class="bxv" style="color:var(--ok)">${fmt(sv)} ریال</span></div></div></section>`;}
-
+/* ===== نمایش تکی «فقط دفتر اقساط» یک عضو (برای کلیک روی نام در لیست اعضای دارای قسط معوق) ===== */
+function showInstallmentBookOnly(mid){
+currentView={fn:showInstallmentBookOnly,args:[mid]};
+const m=D.members.find(x=>x.member_id===mid);
+const loan=getLoan(mid);
+let h=`<button class="bb" onclick="goBack()">← بازگشت</button>`;
+h+=`<div class="dh"><div class="dn">دفتر اقساط ${m?m.name:''}</div></div>`;
+if(loan&&loan.loan_id){
+const pays=getPay(loan.loan_id);
+const startDateFa=toFa(loan.start_date);
+const loanEndDate=toFa(addJalaliMonths(loan.start_date,loan.installments));
+h+=installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate);
+}else{
+h+='<div class="tw" style="padding:16px;text-align:center;color:var(--t3);font-size:.85rem">وامی برای این عضو ثبت نشده است</div>';
+}
+h+=bankHtml();
 h+=footerHtml();
 document.getElementById('mc').innerHTML=h;}
 
@@ -986,7 +1061,7 @@ return predictions;
 
 function showManagementReports(){
 currentView={fn:showManagementReports,args:[]};
-let h='<button class="bb" onclick="showOverview()">← بازگشت</button>';
+let h='<button class="bb" onclick="goBack()">← بازگشت</button>';
 h+='<div class="dh"><div class="dn">گزارشات مدیریتی صندوق</div></div>';
 
 const withBal=D.members.filter(m=>{const l=getLoan(m.member_id);return l&&l.savings>0;})
@@ -998,13 +1073,33 @@ const totalLoanAmount=activeLoans.reduce((s,l)=>s+l.amount,0);
 let overdueMembers=0,overdueAmt=0;
 D.loans.forEach(l=>{if(!l.loan_id)return;const st=getMemberStats(l.member_id);if(st.overdue>0){overdueMembers++;overdueAmt+=st.overdueAmt;}});
 
-let forecastInstallSum=0,forecastSavingSum=0;const dueDates=[];
+// پیش‌بینی اقساط ماه آینده: مبلغ نزدیک‌ترین قسط پرداخت‌نشده‌ی هر وام (چه معوق چه آینده)
+let forecastInstallSum=0,forecastSavingSum=0;
+// میانگین سررسید: فقط بر اساس اقساطِ «آینده» (هنوز معوق نشده) اعضا محاسبه می‌شود و به اقساط
+// معوق کاری ندارد؛ خروجی هم یک «تاریخ کامل» نیست، بلکه میانگین «چندمِ هر ماه» بودن سررسید
+// اقساط اعضاست (مثلاً میانگین روز ۱۱ هر ماه)
+const cutoffMg=getCutoffDate();
+const dueDays=[];
 activeLoans.forEach(l=>{
-const pays=getPay(l.loan_id).filter(p=>p.amount_paid===0).sort((a,b)=>a.due_date.localeCompare(b.due_date));
-if(pays.length){forecastInstallSum+=pays[0].amount;const lin=jalaliToLinear(pays[0].due_date);if(lin)dueDates.push(lin);
+const paysAll=getPay(l.loan_id).filter(p=>p.amount_paid===0).sort((a,b)=>a.due_date.localeCompare(b.due_date));
+if(paysAll.length){forecastInstallSum+=paysAll[0].amount;
 const st=getMemberStats(l.member_id);forecastSavingSum+=st.saving10;}
+const futurePays=paysAll.filter(p=>p.due_date>cutoffMg);
+if(futurePays.length){
+const dp=String(futurePays[0].due_date||'').split('/');
+if(dp.length===3){const dayNum=Number(dp[2]);if(dayNum)dueDays.push(dayNum);}
+}
 });
-const avgDue=dueDates.length?toFa(linearToJalali(dueDates.reduce((s,x)=>s+x,0)/dueDates.length)):'—';
+const avgDueDayNum=dueDays.length?Math.round(dueDays.reduce((s,x)=>s+x,0)/dueDays.length):null;
+const avgDue=avgDueDayNum?('روز '+toFa(avgDueDayNum)+' هر ماه'):'—';
+
+// موجودی بانک (طبق محاسبه‌ی «ترازنامه صندوق») - زودتر محاسبه می‌شود تا در کارت‌های بالا هم نمایش داده شود
+const sumSavingsMg=D.loans.reduce((s,l)=>s+(l.savings||0),0);
+const sumOutstandingMg=D.loans.reduce((s,l)=>s+(l.outstanding||0),0);
+const profitReserveMg=Number(timeCell('B',2))||0;
+const incomeMg=Number(timeCell('B',3))||0;
+const expenseMg=Number(timeCell('B',4))||0;
+const bankBalanceMg=(sumSavingsMg+profitReserveMg+incomeMg)-(sumOutstandingMg+expenseMg);
 
 h+='<div class="su mgmt-su">'+
 '<div class="si hl"><div class="sl">اعضای دارای موجودی حساب</div><div class="sv">'+totalMembersWithBal.toLocaleString('fa-IR')+' نفر</div></div>'+
@@ -1012,6 +1107,7 @@ h+='<div class="su mgmt-su">'+
 '<div class="si"><div class="sl">اعضای دارای قسط معوق</div><div class="sv er">'+overdueMembers.toLocaleString('fa-IR')+' نفر<br><small style="font-size:.68rem;font-weight:400;color:var(--er)">'+fmt(overdueAmt)+' ریال</small></div></div>'+
 '<div class="si"><div class="sl">پیش‌بینی اقساط ماه آینده</div><div class="sv w">'+fmt(forecastInstallSum)+' ریال<br><small style="font-size:.68rem;font-weight:400;color:var(--t2)">میانگین سررسید: '+avgDue+'</small></div></div>'+
 '<div class="si"><div class="sl">پیش‌بینی پس‌انداز اجباری ماه آینده</div><div class="sv">'+fmt(forecastSavingSum)+' ریال</div></div>'+
+'<div class="si hl"><div class="sl" style="display:flex;align-items:center;gap:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>موجودی بانک</div><div class="sv">'+fmt(bankBalanceMg)+' ریال</div></div>'+
 '</div>';
 
 const groupColors=['#15803d','#0369a1','#a16207','#7e22ce','#be123c','#0f766e','#b45309','#4338ca'];
@@ -1030,7 +1126,7 @@ const color=groupColorMap[m.group_id];
 const newGroup=m.group_id!==prevGroup;
 const rowStyle=' style="cursor:pointer;'+(newGroup&&prevGroup!==null?'border-top:3px solid '+color:'')+'"';
 prevGroup=m.group_id;
-h+='<tr'+rowStyle+' onclick="showDetail('+m.member_id+',true)"><td>'+m.name+'</td><td>'+fmt(l.savings)+'</td><td>'+(hasLoan?fmt(l.outstanding):'—')+'</td>'+
+h+='<tr'+rowStyle+' onclick="navigateTo(showDetail,['+m.member_id+',true])"><td>'+m.name+'</td><td>'+fmt(l.savings)+'</td><td>'+(hasLoan?fmt(l.outstanding):'—')+'</td>'+
 '<td>'+(hasLoan?toFa(l.start_date):'—')+'</td><td>'+(hasLoan?l.installments.toLocaleString('fa-IR'):'—')+'</td>'+
 '<td>'+endDate+'</td><td>'+(st.overdue>0?st.overdue.toLocaleString('fa-IR'):'—')+'</td>'+
 '<td>'+(st.overdueAmt>0?fmt(st.overdueAmt):'—')+'</td></tr>';
@@ -1040,13 +1136,13 @@ h+='</tbody></table></div></section>';
 const overdueList=[];
 D.loans.forEach(l=>{if(!l.loan_id)return;const od=getOverdue(l.loan_id);if(od.length){const m=D.members.find(x=>x.member_id===l.member_id);
 const sorted=od.slice().sort((a,b)=>a.due_date.localeCompare(b.due_date));
-overdueList.push({name:m?m.name:'—',count:od.length,amt:od.reduce((s,p)=>s+p.amount,0),first:sorted[0].due_date});}});
+overdueList.push({member_id:l.member_id,name:m?m.name:'—',count:od.length,amt:od.reduce((s,p)=>s+p.amount,0),first:sorted[0].due_date});}});
 overdueList.sort((a,b)=>a.first.localeCompare(b.first));
 
 h+='<section class="sc"><div class="sh"><h2 class="st">اعضای دارای قسط معوق</h2></div>';
 if(overdueList.length){
 h+='<div class="tw"><table><thead><tr><th>نام عضو</th><th>تعداد قسط معوق</th><th>مبلغ معوقی</th><th>تاریخ اولین قسط معوق</th></tr></thead><tbody>';
-overdueList.forEach(o=>{h+='<tr><td>'+o.name+'</td><td>'+o.count.toLocaleString('fa-IR')+'</td><td>'+fmt(o.amt)+'</td><td>'+toFa(o.first)+'</td></tr>';});
+overdueList.forEach(o=>{h+='<tr style="cursor:pointer" onclick="navigateTo(showInstallmentBookOnly,['+o.member_id+'])"><td>'+o.name+'</td><td>'+o.count.toLocaleString('fa-IR')+'</td><td>'+fmt(o.amt)+'</td><td>'+toFa(o.first)+'</td></tr>';});
 h+='</tbody></table></div>';
 }else{h+='<div class="tw" style="padding:16px;text-align:center;color:var(--t3);font-size:.85rem">هیچ قسط معوقی وجود ندارد</div>';}
 h+='</section>';
@@ -1091,6 +1187,7 @@ if(hasAny){h+='<div class="tw"><table><thead><tr><th>نام متقاضی</th><th
 else{h+='<div class="tw" style="padding:16px;text-align:center;color:var(--t3);font-size:.85rem">درخواستی ثبت نشده است</div>';}
 h+='</section>';
 
+h+=bankHtml();
 h+=footerHtml();
 document.getElementById('mc').innerHTML=h;}
 
