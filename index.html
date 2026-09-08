@@ -277,6 +277,22 @@ tr[data-clickable]:hover td{background:var(--bg-3);cursor:pointer}
 .grand-row .rl{font-size:.85rem;color:var(--ivory);font-weight:600}
 .grand-row .rv{font-size:1.08rem;font-weight:800;color:var(--gold-bright)}
 
+/* ===== داشبورد مدیریتی ===== */
+.mg-dashboard{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin:4px 0 28px}
+.mg-chart-card{background:linear-gradient(160deg,var(--bg-3),var(--bg-2));border:1px solid var(--line-strong);border-radius:var(--radius);padding:18px;min-width:0}
+.mg-chart-card.wide{grid-column:1/-1}
+.mg-chart-title{font-size:.84rem;font-weight:700;margin-bottom:15px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mg-chart-title small{font-size:.65rem;color:var(--muted);font-weight:400}
+.mg-donut-layout{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.mg-donut{width:142px;height:142px;border-radius:50%;position:relative;flex-shrink:0;background:conic-gradient(var(--teal-vivid) 0 50%,var(--rose) 50% 100%)}
+.mg-donut::after{content:'';position:absolute;inset:25px;background:var(--bg-2);border-radius:50%;border:1px solid var(--line)}
+.mg-donut-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:1;font-size:.68rem;color:var(--muted)}
+.mg-donut-center b{font-size:1.05rem;color:var(--ivory)}
+.mg-legend{display:grid;gap:10px;font-size:.75rem;min-width:155px}.mg-legend-row{display:flex;align-items:center;gap:8px}.mg-legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}.mg-legend-row b{margin-right:auto}
+.mg-bars{display:grid;gap:12px}.mg-bar-row{display:grid;grid-template-columns:125px 1fr 90px;align-items:center;gap:10px;font-size:.7rem}.mg-bar-track{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.mg-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal-vivid),var(--gold-vivid))}.mg-bar-fill.risk{background:linear-gradient(90deg,var(--rose),#d87d55)}.mg-bar-value{text-align:left;color:var(--ivory);font-weight:700}
+.mg-due-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px}.mg-due-item{display:flex;align-items:center;gap:10px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}.mg-due-date{font-size:.75rem;font-weight:700;color:var(--gold-bright);min-width:74px}.mg-due-name{font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mg-due-item.overdue{border-right:3px solid var(--rose)}.mg-due-item.overdue .mg-due-date{color:var(--rose)}
+@media(max-width:760px){.mg-dashboard{grid-template-columns:1fr}.mg-chart-card.wide{grid-column:auto}.mg-bar-row{grid-template-columns:105px 1fr 75px}}
+
 /* ===== اطلاعات بانکی ===== */
 .bank-panel{background:var(--bg-2);border:1px solid var(--line-strong);border-radius:var(--radius);padding:20px;margin-bottom:24px}
 .bank-title{font-size:.86rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--teal-bright)}
@@ -1313,6 +1329,14 @@ predictions[r.idx]='نامشخص (کمبود نقدینگی)';
 return predictions;
 }
 
+function memberDueInfo(mid){
+ const loan=getLoan(mid);if(!loan||!loan.loan_id)return{date:'',label:'—',overdue:false,amount:0};
+ const cutoff=getCutoffDate();const pays=getPay(loan.loan_id).filter(p=>p.amount_paid===0&&p.due_date).sort((a,b)=>a.due_date.localeCompare(b.due_date));
+ const future=pays.filter(p=>p.due_date>cutoff);const chosen=future[0]||pays[0];
+ if(!chosen)return{date:'',label:'تسویه شده',overdue:false,amount:0};
+ const overdue=chosen.due_date<=cutoff;
+ return{date:chosen.due_date,label:(overdue?'معوق: ':'')+toFa(chosen.due_date),overdue:overdue,amount:Number(chosen.amount)||0};
+}
 function showManagementReports(){
 currentView={fn:showManagementReports,args:[]};
 setActiveRail('reports');
@@ -1361,19 +1385,29 @@ h+='<div class="metric-grid">'+
 '<div class="metric-card emph"><div class="mlab">موجودی بانک</div><div class="mval">'+fmt(bankBalanceMg)+' ریال</div></div>'+
 '</div>';
 
+ // داشبورد تحلیلی: ترکیب وام و ریسک وصول
+ const loanPrincipal=D.loans.reduce((s,l)=>s+(Number(l.amount)||0),0);
+ const outstandingPrincipal=D.loans.reduce((s,l)=>s+(Number(l.outstanding)||0),0);
+ const repaidPrincipal=Math.max(0,loanPrincipal-outstandingPrincipal);
+ const paidPct=loanPrincipal?Math.round(repaidPrincipal/loanPrincipal*100):0;
+ const riskPct=totalMembersWithBal?Math.round(overdueMembers/totalMembersWithBal*100):0;
+ h+='<div class="mg-dashboard">';
+ h+='<div class="mg-chart-card"><div class="mg-chart-title"><span>وضعیت بازپرداخت وام</span><small>بر اساس اصل وام‌ها</small></div><div class="mg-donut-layout"><div class="mg-donut" style="background:conic-gradient(var(--teal-vivid) 0 '+paidPct+'%,var(--gold-vivid) '+paidPct+'% 100%)"><div class="mg-donut-center"><b>'+toFa(paidPct)+'٪</b><span>پرداخت شده</span></div></div><div class="mg-legend"><div class="mg-legend-row"><span class="mg-legend-dot" style="background:var(--teal-vivid)"></span>پرداخت‌شده <b>'+fmt(repaidPrincipal)+'</b></div><div class="mg-legend-row"><span class="mg-legend-dot" style="background:var(--gold-vivid)"></span>مانده بدهی <b>'+fmt(outstandingPrincipal)+'</b></div><div class="mg-legend-row"><span class="mg-legend-dot" style="background:var(--rose)"></span>ریسک معوق <b>'+toFa(riskPct)+'٪ اعضا</b></div></div></div></div>';
+ h+='<div class="mg-chart-card"><div class="mg-chart-title"><span>شاخص ریسک وصول</span><small>نیازمند پیگیری مدیر</small></div><div class="mg-bars"><div class="mg-bar-row"><span>اعضای معوق</span><div class="mg-bar-track"><div class="mg-bar-fill risk" style="width:'+Math.min(100,riskPct)+'%"></div></div><span class="mg-bar-value">'+toFa(overdueMembers)+' نفر</span></div><div class="mg-bar-row"><span>مبلغ معوق</span><div class="mg-bar-track"><div class="mg-bar-fill risk" style="width:'+Math.min(100,overdueAmt/(Math.max(1,sumOutstandingMg)*.5)*100)+'%"></div></div><span class="mg-bar-value">'+fmt(overdueAmt)+'</span></div><div class="mg-bar-row"><span>نقدینگی خالص</span><div class="mg-bar-track"><div class="mg-bar-fill" style="width:'+Math.min(100,Math.max(0,bankBalanceMg)/(Math.max(1,sumSavingsMg))*100)+'%"></div></div><span class="mg-bar-value">'+fmt(bankBalanceMg)+'</span></div></div></div></div>';
+
 h+='<div class="dot-divider"><span class="diamond"></span><span>لیست اعضای دارای موجودی حساب</span></div>';
 h+='<div class="book-panel"><div class="book-wrap"><table><thead><tr>'+
-'<th>نام عضو</th><th>مانده سپرده</th><th>مانده بدهی وام</th><th>تاریخ دریافت وام</th><th>تعداد کل اقساط</th><th>تاریخ پایان وام</th><th>اقساط معوق</th><th>مبلغ معوقی</th>'+
+'<th>نام عضو</th><th>نزدیک‌ترین سررسید قسط</th><th>مانده سپرده</th><th>مانده بدهی وام</th><th>تاریخ دریافت وام</th><th>تعداد کل اقساط</th><th>تاریخ پایان وام</th><th>اقساط معوق</th><th>مبلغ معوقی</th>'+
 '</tr></thead><tbody>';
 let prevGroup=null;
 withBal.forEach(m=>{
-const l=getLoan(m.member_id);const st=getMemberStats(m.member_id);
+const l=getLoan(m.member_id);const st=getMemberStats(m.member_id);const due=memberDueInfo(m.member_id);
 const hasLoan=l&&l.loan_id;
 const endDate=hasLoan?toFa(addJalaliMonths(l.start_date,l.installments)):'—';
 const newGroup=m.group_id!==prevGroup;
 const rowClass=(newGroup&&prevGroup!==null)?' class="group-split"':'';
 prevGroup=m.group_id;
-h+='<tr data-clickable'+rowClass+' onclick="navigateTo(showDetail,['+m.member_id+',true])"><td>'+m.name+'</td><td>'+fmt(l.savings)+'</td><td>'+(hasLoan?fmt(l.outstanding):'—')+'</td>'+
+h+='<tr data-clickable'+rowClass+' onclick="navigateTo(showDetail,['+m.member_id+',true])"><td>'+m.name+'</td><td class="'+(due.overdue?'num-debit':'')+'">'+due.label+'</td><td>'+fmt(l.savings)+'</td><td>'+(hasLoan?fmt(l.outstanding):'—')+'</td>'+
 '<td>'+(hasLoan?toFa(l.start_date):'—')+'</td><td>'+(hasLoan?l.installments.toLocaleString('fa-IR'):'—')+'</td>'+
 '<td>'+endDate+'</td><td>'+(st.overdue>0?st.overdue.toLocaleString('fa-IR'):'—')+'</td>'+
 '<td>'+(st.overdueAmt>0?fmt(st.overdueAmt):'—')+'</td></tr>';
