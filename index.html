@@ -301,6 +301,25 @@ tr[data-clickable]:hover td{background:var(--bg-3);cursor:pointer}
 .ping-toast.show{opacity:1;visibility:visible;transform:translateY(0)}
 .ping-toast svg{width:15px;height:15px;color:var(--teal-bright);flex-shrink:0}
 
+/* ===== صندوق پیام ===== */
+.msg-badge{position:absolute;top:3px;left:3px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:var(--rose);color:#fff;font-size:.58rem;line-height:17px;text-align:center;font-weight:700}
+.message-panel{background:linear-gradient(160deg,var(--bg-3),var(--bg-2));border:1px solid var(--line-strong);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+.message-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.message-toolbar h3{font-size:.95rem}
+.message-compose{display:grid;gap:10px;margin-bottom:18px}
+.message-compose input,.message-compose textarea,.message-edit-input{width:100%;background:var(--bg);border:1px solid var(--line-strong);border-radius:10px;color:var(--ivory);padding:10px 12px;font:inherit;font-size:.82rem}
+.message-compose textarea,.message-edit-input{min-height:92px;resize:vertical}
+.message-compose input:focus,.message-compose textarea:focus,.message-edit-input:focus{outline:none;border-color:var(--teal-bright);box-shadow:0 0 0 3px rgba(94,201,186,.12)}
+.message-card{border:1px solid var(--line);background:var(--bg-2);border-radius:10px;padding:14px;margin-top:10px}
+.message-card.unread{border-right:3px solid var(--gold-bright);background:linear-gradient(90deg,rgba(204,154,61,.08),var(--bg-2))}
+.message-card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.message-subject{font-weight:700;font-size:.86rem}.message-meta{font-size:.68rem;color:var(--muted)}
+.message-body{white-space:pre-wrap;font-size:.82rem;line-height:2;margin:10px 0;color:var(--ivory)}
+.message-reply{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;background:var(--bg-3);border-radius:8px;padding:10px}
+.message-actions{display:flex;gap:7px;flex-wrap:wrap}.message-actions button,.message-toolbar button{border:1px solid var(--line-strong);background:transparent;color:var(--muted);border-radius:8px;padding:6px 10px;font:inherit;font-size:.7rem;cursor:pointer}.message-actions button:hover,.message-toolbar button:hover{color:var(--teal-bright);border-color:var(--teal-bright)}
+.message-empty{text-align:center;color:var(--muted);font-size:.82rem;padding:28px 10px}
+.btn-mini{width:auto!important;padding:8px 13px!important;margin:0!important;font-size:.76rem!important}
+
 /* ===== واکنش‌گرا ===== */
 html{overflow-x:hidden}
 body{overflow-x:hidden}
@@ -480,6 +499,11 @@ body{overflow-x:hidden}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
       <span class="rail-tip">گزارشات مدیریتی</span>
     </button>
+    <button class="rail-item" id="messagesRailBtn" data-rail="messages" onclick="navigateTo(showMessages,[])" title="صندوق پیام">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v12H8l-4 3V5z"/><path d="M8 9h8M8 13h5"/></svg>
+      <span class="msg-badge" id="msgBadge" style="display:none">۰</span>
+      <span class="rail-tip">صندوق پیام</span>
+    </button>
     <div class="rail-spacer"></div>
     <button class="rail-item" onclick="openChangePw()" title="تغییر رمز">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -505,7 +529,9 @@ body{overflow-x:hidden}
    قبلی؛ فقط قالب‌های HTML اکنون متناسب با نظام طراحی «شبستان» است)
    ============================================================ */
 const API_URL='https://script.google.com/macros/s/AKfycbxYCzkP4GyfFuAPcI82q-WqgUObQK0hCK5hfAFKeGh00B37bqmRozFVaQZ-bALf3mggWg/exec';
-let D={members:[],ledger:[],loans:[],payments:[],time:[],time_h:[],notice_text:'',update_date:'',loan_notifications:[]},U=null;
+const CASHIER_PHONE='09133160578';
+let D={members:[],ledger:[],loans:[],payments:[],time:[],time_h:[],notice_text:'',update_date:'',loan_notifications:[],messages:[]},U=null;
+let knownMessageIds=null;
 let currentView={fn:null,args:[]};
 
 let backStack=[];
@@ -540,6 +566,7 @@ D.time_h=payload.time_h||[];
 D.notice_text=payload.notice_text||'';
 D.update_date=normDate(payload.update_date)||String(payload.update_date||'').trim();
 D.loan_notifications=payload.loan_notifications||[];
+D.messages=payload.messages||[];
 norm();
 }
 
@@ -576,6 +603,41 @@ D.members.forEach(r=>{r.member_id=Number(r.member_id)||0;r.name=String(r.name||'
 D.ledger.forEach(r=>{r.member_id=Number(r.member_id)||0;r.date=normDate(r.date);r.description=String(r.description||'').trim();r.debit=Number(r.debit)||0;r.credit=Number(r.credit)||0;});
 D.loans.forEach(r=>{r.member_id=Number(r.member_id)||0;r.loan_id=String(r.loan_id||'').trim();r.savings=Number(r['Savings balance'])||0;r.outstanding=Number(r['Outstanding loan balance'])||0;r.amount=Number(r.amount)||0;r.installments=Number(r.installments)||0;r.start_date=normDate(r.start_date);});
 D.payments.forEach(r=>{r.loan_id=String(r.loan_id||'').trim();r.nam=String(r.nam||'').trim();r.installment_no=Number(r.installment_no)||0;r.amount=Number(r.amount)||0;r.due_date=normDate(r.due_date);r.amount_paid=Number(r['amount paid'])||0;r.paid_date=normDate(r.paid_date);});}
+
+function isCashier(){return !!U&&String(U.phone||'').replace(/[^0-9]/g,'')===CASHIER_PHONE;}
+function escMsg(v){return String(v===null||v===undefined?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function msgDate(v){return v?toFa(normDate(v)||v):'—';}
+function updateMessageBadge(){
+ const badge=document.getElementById('msgBadge'); if(!badge||!U)return;
+ const unread=D.messages.filter(m=>String(m.status||'').toLowerCase()!=='read' && (isCashier()||String(m.to_phone||m.recipient_phone||'')===String(U.phone||''))).length;
+ badge.textContent=toFa(unread>99?'۹۹+':unread); badge.style.display=unread?'block':'none';
+}
+function enableMessageNotifications(){
+ if(!isCashier()||!('Notification' in window))return;
+ if(Notification.permission==='default')Notification.requestPermission().catch(function(){});
+}
+function notifyNewMessages(messages){
+ if(!isCashier()||!Array.isArray(messages))return;
+ const ids=messages.map(function(m){return String(m.id||m.message_id||'');}).filter(Boolean);
+ if(knownMessageIds===null){knownMessageIds=ids;return;}
+ const fresh=messages.filter(function(m){return String(m.status||'').toLowerCase()!=='read'&&ids.indexOf(String(m.id||m.message_id||''))>-1&&knownMessageIds.indexOf(String(m.id||m.message_id||''))===-1;});
+ knownMessageIds=ids;
+ if(!fresh.length)return;
+ fresh.slice(0,3).forEach(function(m){
+   const title='پیام جدید در صندوق';
+   const text=(m.from_name||m.from_phone||'عضو صندوق')+' — '+(m.subject||'بدون موضوع');
+   showUpdateToast(text);
+   if('Notification' in window&&Notification.permission==='granted'){
+     try{const n=new Notification(title,{body:text,tag:'sandoogh-message-'+String(m.id||m.message_id),renotify:true});n.onclick=function(){window.focus();navigateTo(showMessages,[]);n.close();};}catch(e){}
+   }
+ });
+}
+function loadMessages(silent){
+ const tok=getStoredToken(); if(!tok||!U)return Promise.resolve();
+ return apiCall({action:'messagesList',token:tok,all:isCashier()?'1':'0'}).then(function(res){
+   if(res&&res.success){D.messages=res.messages||res.data&&res.data.messages||[];notifyNewMessages(D.messages);updateMessageBadge();if(!silent&&currentView.fn===showMessages)showMessages();}
+ }).catch(function(){});
+}
 
 function showUpdateToast(msg){
 const el=document.getElementById('pingToast');
@@ -644,7 +706,7 @@ if(!tok){document.getElementById('bootScreen').classList.add('hidden');showLogin
 const dev=await detectDevice();
 apiCall({action:'getData',token:tok,entry:'1',device:dev}).then(function(res){
 document.getElementById('bootScreen').classList.add('hidden');
-if(res&&res.success){U=res.user;applyServerData(res.data);showLoginAlert();}
+ if(res&&res.success){U=res.user;applyServerData(res.data);enableMessageNotifications();loadMessages(true);showLoginAlert();}
 else{clearStoredToken();showLogin();}
 }).catch(function(){document.getElementById('bootScreen').classList.add('hidden');showLogin();});
 }
@@ -657,7 +719,8 @@ if(!tok)return;
 apiCall({action:'getData',token:tok}).then(function(res){
 if(!res||!res.success)return;
 const prevCounts=[D.members.length,D.ledger.length,D.loans.length,D.payments.length,D.time.length];
-applyServerData(res.data);
+ applyServerData(res.data);
+ loadMessages(true);
 const newCounts=[D.members.length,D.ledger.length,D.loans.length,D.payments.length,D.time.length];
 const changed=prevCounts.some((c,i)=>c!==newCounts[i]);
 if(currentView.fn){try{currentView.fn.apply(null,currentView.args);}catch(e){}}
@@ -765,8 +828,11 @@ document.getElementById('gateError').innerHTML='خطا در دریافت اطل�
 document.getElementById('gateError').style.display='block';
 return;
 }
-U=res.user;
-applyServerData(dres.data);
+ U=res.user;
+ applyServerData(dres.data);
+ enableMessageNotifications();
+ loadMessages(true);
+ loadMessages(true);
 saveCredentialToBrowser(p,w);
 showLoginAlert();
 });
@@ -799,7 +865,7 @@ function logout(){
 const tok=getStoredToken();
 if(tok)apiCall({action:'logout',token:tok}).catch(function(){});
 clearStoredToken();
-U=null;D={members:[],ledger:[],loans:[],payments:[],time:[],time_h:[],notice_text:'',update_date:''};
+U=null;D={members:[],ledger:[],loans:[],payments:[],time:[],time_h:[],notice_text:'',update_date:'',messages:[]};
 document.getElementById('workspace').style.display='none';document.getElementById('gateScreen').style.display='flex';document.getElementById('gateError').style.display='none';
 }
 
@@ -892,6 +958,41 @@ function copyText(txt, btnElement) {
     if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
         navigator.clipboard.writeText(txt).then(showCopied).catch(fallbackCopy);
     } else { fallbackCopy(); }
+}
+
+function messageApi(action,extra){
+ const tok=getStoredToken(); return apiCall(Object.assign({action:action,token:tok},extra||{})).then(function(res){
+   if(!res||!res.success)throw new Error((res&&res.message)||'خطا در عملیات پیام'); return res;
+ });
+}
+function messageNotice(text){showUpdateToast(text);}
+function sendMessage(){
+ const subject=(document.getElementById('msgSubject').value||'').trim(), body=(document.getElementById('msgBody').value||'').trim();
+ if(!body){messageNotice('متن پیام را وارد کنید');return;}
+ const btn=document.getElementById('msgSendBtn');btn.disabled=true;
+ messageApi('messageSend',{to_phone:CASHIER_PHONE,subject:subject||'پیام جدید',body:body}).then(function(){document.getElementById('msgSubject').value='';document.getElementById('msgBody').value='';messageNotice('پیام برای صندوق‌دار ارسال شد');return loadMessages(false);}).catch(function(e){messageNotice(e.message);}).then(function(){btn.disabled=false;});
+}
+function markMessageRead(id){messageApi('messageMarkRead',{message_id:id}).then(function(){const m=D.messages.find(x=>String(x.id||x.message_id)===String(id));if(m)m.status='read';updateMessageBadge();if(currentView.fn===showMessages)showMessages();}).catch(function(){});}
+function replyMessage(id){
+ const box=document.getElementById('reply-'+id), text=box&&box.value.trim(); if(!text){messageNotice('متن پاسخ را وارد کنید');return;}
+ messageApi('messageReply',{message_id:id,body:text}).then(function(){messageNotice('پاسخ ارسال شد');return loadMessages(false);}).catch(function(e){messageNotice(e.message);});
+}
+function editMessage(id){const m=D.messages.find(x=>String(x.id||x.message_id)===String(id));if(!m)return;const v=prompt('متن جدید پیام:',m.body||m.message||'');if(v===null||!v.trim())return;messageApi('messageEdit',{message_id:id,body:v.trim()}).then(function(){messageNotice('پیام ویرایش شد');return loadMessages(false);}).catch(function(e){messageNotice(e.message);});}
+function deleteMessage(id){if(!confirm('این پیام حذف شود؟'))return;messageApi('messageDelete',{message_id:id}).then(function(){messageNotice('پیام حذف شد');return loadMessages(false);}).catch(function(e){messageNotice(e.message);});}
+function showMessages(){
+ currentView={fn:showMessages,args:[]};setActiveRail('messages');updateMessageBadge();
+ let h=userChipHtml()+'<div class="page-head"><div class="octostar"><i></i><i></i></div><h2 class="kufi">صندوق پیام</h2></div>';
+ h+='<div class="message-panel"><div class="message-toolbar"><h3>'+ (isCashier()?'مدیریت پیام‌های اعضا':'ارسال پیام به صندوق‌دار') +'</h3><button onclick="loadMessages(false)">به‌روزرسانی</button></div>';
+ if(!isCashier())h+='<div class="message-compose"><input id="msgSubject" placeholder="موضوع پیام (اختیاری)"><textarea id="msgBody" placeholder="متن پیام خود را بنویسید..."></textarea><button class="btn-solid btn-mini" id="msgSendBtn" onclick="sendMessage()">ارسال پیام</button></div>';
+ const list=D.messages.slice().sort(function(a,b){return String(b.created_at||b.timestamp||'').localeCompare(String(a.created_at||a.timestamp||''));});
+ if(!list.length)h+='<div class="message-empty">هنوز پیامی ثبت نشده است</div>';
+ list.forEach(function(m){const id=escMsg(m.id||m.message_id), unread=String(m.status||'').toLowerCase()!=='read';const from=escMsg(m.from_name||m.from_phone||m.sender_phone||'عضو صندوق');const subj=escMsg(m.subject||'بدون موضوع');const body=escMsg(m.body||m.message||m.text||'');
+  h+='<div class="message-card '+(unread?'unread':'')+'"><div class="message-card-head"><div><div class="message-subject">'+subj+'</div><div class="message-meta">از: '+from+' · '+msgDate(m.created_at||m.timestamp||m.date)+'</div></div><span class="status-chip '+(unread?'overdue':'paid')+'"><span class="diamond"></span>'+(unread?'جدید':'خوانده‌شده')+'</span></div><div class="message-body">'+body+'</div>';
+  if(m.reply||m.response||m.reply_body)h+='<div class="message-reply"><b>پاسخ صندوق‌دار:</b><div class="message-body">'+escMsg(m.reply||m.response||m.reply_body)+'</div></div>';
+  h+='<div class="message-actions">'+(unread?'<button onclick="markMessageRead(\''+id+'\')">علامت‌گذاری به‌عنوان خوانده‌شده</button>':'');
+  if(isCashier())h+='<button onclick="replyMessage(\''+id+'\')">پاسخ</button><button onclick="editMessage(\''+id+'\')">ویرایش</button><button onclick="deleteMessage(\''+id+'\')">حذف</button>';
+  h+='</div>'+(isCashier()?'<textarea class="message-edit-input" id="reply-'+id+'" placeholder="پاسخ صندوق‌دار..."></textarea>':'')+'</div>';});
+ h+='</div><div class="site-footer">'+footerHtml()+'</div>';document.getElementById('canvas').innerHTML=h;
 }
 
 function bankHtml(){return `<div class="bank-panel"><div class="bank-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="13" rx="1"/><path d="M2 11h20"/><path d="M6 3l6-1 6 1"/></svg>اطلاعات حساب بانکی (بانک صادرات)</div>
