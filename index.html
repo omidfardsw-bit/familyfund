@@ -389,6 +389,20 @@ body{overflow-x:hidden}
   .grand-row,.total-row{flex-wrap:wrap;gap:6px}
   .footer-socials{gap:10px}
 }
+@media(max-width:760px){
+  .canvas{padding-left:12px;padding-right:12px}
+  .page-head{gap:8px}.page-head .octostar{width:30px;height:30px}.page-head h2{font-size:1rem;line-height:1.5}
+  .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric-card{padding:11px 10px;min-height:82px}
+  .mlab{font-size:.62rem;line-height:1.65}.mval{font-size:.86rem;line-height:1.6;overflow-wrap:anywhere}.mval small{font-size:.57rem}
+  .mg-dashboard{gap:10px;margin-bottom:20px}.mg-chart-card{padding:13px 11px}.mg-donut-layout{justify-content:center;gap:14px}
+  .mg-donut{width:118px;height:118px}.mg-donut::after{inset:21px}.mg-legend{min-width:135px;gap:7px;font-size:.66rem}
+  .mg-bar-row{grid-template-columns:82px minmax(0,1fr) 70px;gap:6px;font-size:.62rem}.mg-bar-value{font-size:.61rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .book-panel{margin-bottom:20px}.book-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{min-width:680px;font-size:.72rem}th,td{padding:8px 9px;font-size:.68rem}
+  .book-wrap::after{content:'برای دیدن ستون‌های بیشتر، جدول را افقی حرکت دهید';display:block;padding:7px 10px;text-align:center;color:var(--muted-2);font-size:.62rem;border-top:1px solid var(--line);background:var(--bg-3)}
+  .led-row{padding:10px 11px;gap:8px}.led-row .rl{min-width:0;white-space:normal;font-size:.68rem}.led-row .rv{font-size:.72rem;overflow-wrap:anywhere}
+  .grand-row{padding:12px 13px}.grand-row .rl{font-size:.75rem}.grand-row .rv{font-size:.9rem}.fab-back{width:42px;height:42px}
+}
 @media print{
   *{transition:none!important;animation:none!important}
   body{background:#fff}
@@ -1397,7 +1411,7 @@ h+='<div class="metric-grid">'+
 
 h+='<div class="dot-divider"><span class="diamond"></span><span>لیست اعضای دارای موجودی حساب</span></div>';
 h+='<div class="book-panel"><div class="book-wrap"><table><thead><tr>'+
-'<th>نام عضو</th><th>نزدیک‌ترین سررسید قسط</th><th>مانده سپرده</th><th>مانده بدهی وام</th><th>تاریخ دریافت وام</th><th>تعداد کل اقساط</th><th>تاریخ پایان وام</th><th>اقساط معوق</th><th>مبلغ معوقی</th>'+
+'<th>نام عضو</th><th>مانده سپرده</th><th>مانده بدهی وام</th><th>تاریخ دریافت وام</th><th>تعداد کل اقساط</th><th>تاریخ پایان وام</th><th>اقساط معوق</th><th>مبلغ معوقی</th><th>نزدیک‌ترین سررسید قسط</th>'+
 '</tr></thead><tbody>';
 let prevGroup=null;
 withBal.forEach(m=>{
@@ -1407,10 +1421,10 @@ const endDate=hasLoan?toFa(addJalaliMonths(l.start_date,l.installments)):'—';
 const newGroup=m.group_id!==prevGroup;
 const rowClass=(newGroup&&prevGroup!==null)?' class="group-split"':'';
 prevGroup=m.group_id;
-h+='<tr data-clickable'+rowClass+' onclick="navigateTo(showDetail,['+m.member_id+',true])"><td>'+m.name+'</td><td class="'+(due.overdue?'num-debit':'')+'">'+due.label+'</td><td>'+fmt(l.savings)+'</td><td>'+(hasLoan?fmt(l.outstanding):'—')+'</td>'+
+h+='<tr data-clickable'+rowClass+' onclick="navigateTo(showDetail,['+m.member_id+',true])"><td>'+m.name+'</td><td>'+fmt(l.savings)+'</td><td>'+(hasLoan?fmt(l.outstanding):'—')+'</td>'+
 '<td>'+(hasLoan?toFa(l.start_date):'—')+'</td><td>'+(hasLoan?l.installments.toLocaleString('fa-IR'):'—')+'</td>'+
 '<td>'+endDate+'</td><td>'+(st.overdue>0?st.overdue.toLocaleString('fa-IR'):'—')+'</td>'+
-'<td>'+(st.overdueAmt>0?fmt(st.overdueAmt):'—')+'</td></tr>';
+'<td>'+(st.overdueAmt>0?fmt(st.overdueAmt):'—')+'</td><td class="'+(due.overdue?'num-debit':'')+'">'+due.label+'</td></tr>';
 });
 h+='</tbody></table></div></div>';
 
