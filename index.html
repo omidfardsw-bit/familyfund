@@ -420,12 +420,6 @@ body{overflow-x:hidden}
 #installBook.mono-export .status-chip .diamond{background:#000!important}
 #installBook.mono-export .install-meta{color:#000;border-color:#000}
 #installBook.mono-export .install-meta b{color:#000}
-@media print{
-  body.printing-book *{visibility:hidden!important}
-  body.printing-book #installBook,body.printing-book #installBook *{visibility:visible!important}
-  body.printing-book #installBook{position:absolute;top:0;left:0;width:100%}
-  @page{size:A5;margin:8mm}
-}
 </style>
 </head>
 <body>
@@ -553,6 +547,7 @@ body{overflow-x:hidden}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* ============================================================
    منطق برنامه (الگوریتم‌ها و جریان داده بدون تغییر نسبت به نسخه‌های
@@ -1189,10 +1184,8 @@ document.getElementById('canvas').innerHTML=h;}
 function installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate){
 let h=`<div class="dot-divider"><span class="diamond"></span><span>دفتر اقساط</span></div>
 <div class="book-panel" id="installBook">
-<div class="book-head"><span></span>
-<button class="btn-outline" style="width:auto;margin:0;padding:9px 16px;color:var(--teal-bright);border-color:var(--teal-bright)" onclick="generateInstallmentImage(this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-left:6px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>خروجی تصویر</button>
-</div>
+<button class="btn-outline" style="width:auto;margin:0;padding:9px 16px;color:var(--teal-bright);border-color:var(--teal-bright)" onclick="generateInstallmentPdf(this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-left:6px"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>ساخت PDF</button>
 <div class="install-meta"><span>عضو: <b>${m.name}</b> — وام: <b>${fmt(loan.amount)} ریال</b> (${loan.installments.toLocaleString('fa-IR')} قسط)</span><span>شروع: <b>${startDateFa}</b> | پایان: <b>${loanEndDate}</b></span></div>
 <div class="book-wrap"><table><thead><tr><th>قسط</th><th>مبلغ</th><th>سررسید</th><th>تاریخ پرداخت</th><th>وضعیت</th></tr></thead><tbody>`;
 pays.forEach(p=>{
@@ -1223,40 +1216,36 @@ h+='<div class="book-wrap" style="padding:18px;text-align:center;color:var(--mut
 h+=`<div class="site-footer">${footerHtml()}</div>`;
 document.getElementById('canvas').innerHTML=h;}
 
-function generateInstallmentImage(btn){
+function generateInstallmentPdf(btn){
 const el=document.getElementById('installBook');
 if(!el){alert('دفتر اقساط یافت نشد');return;}
-if(typeof html2canvas==='undefined'){alert('کتابخانه تولید تصویر بارگذاری نشده است. اتصال اینترنت خود را بررسی کنید');return;}
-const prevLabel=btn?btn.innerHTML:'';
-if(btn){btn.disabled=true;btn.innerHTML='در حال تولید تصویر...';}
-el.classList.add('mono-export');
-setTimeout(function(){
-html2canvas(el,{scale:3,backgroundColor:'#ffffff',useCORS:true}).then(function(canvas){
-el.classList.remove('mono-export');
-if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
-const A5_W=1748,A5_H=2480;
-const a5Canvas=document.createElement('canvas');
-a5Canvas.width=A5_W;a5Canvas.height=A5_H;
-const ctx=a5Canvas.getContext('2d');
-ctx.fillStyle='#ffffff';
-ctx.fillRect(0,0,A5_W,A5_H);
-const margin=40;
-const availW=A5_W-margin*2,availH=A5_H-margin*2;
-const scale=Math.min(availW/canvas.width,availH/canvas.height,1);
-const drawW=canvas.width*scale,drawH=canvas.height*scale;
-const dx=(A5_W-drawW)/2,dy=(A5_H-drawH)/2;
-ctx.drawImage(canvas,dx,dy,drawW,drawH);
-const link=document.createElement('a');
-link.download='installment-book-'+Date.now()+'.jpg';
-link.href=a5Canvas.toDataURL('image/jpeg',0.92);
-document.body.appendChild(link); link.click(); link.remove();
-}).catch(function(err){
-el.classList.remove('mono-export');
-if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
-console.error('خطا در تولید تصویر دفتر اقساط:',err);
-alert('خطا در تولید تصویر. لطفاً دوباره تلاش کنید');
-});
-},60);
+if(typeof html2canvas==='undefined'||typeof window.jspdf==='undefined'){alert('کتابخانه تولید PDF بارگذاری نشده است. اتصال اینترنت خود را بررسی کنید');return;}
+const old=btn?btn.innerHTML:'';if(btn){btn.disabled=true;btn.innerHTML='در حال ساخت PDF...';}
+const loanForPdf=currentView&&currentView.args?getLoan(Number(currentView.args[0])):null;
+let runningBalance=loanForPdf?Number(loanForPdf.amount)||0:0;
+const principalPerInstallment=loanForPdf&&Number(loanForPdf.installments)>0?Number(loanForPdf.amount)/Number(loanForPdf.installments):0;
+const faDigits=s=>String(s||'').replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
+const pdfPayments=loanForPdf?getPay(loanForPdf.loan_id).slice().sort((a,b)=>(Number(a.installment_no)||0)-(Number(b.installment_no)||0)):[];
+const sourceRows=pdfPayments.map(p=>{const paidDate=String(p.paid_date||'').trim();const hasPaidDate=paidDate!==''&&paidDate!=='0'&&paidDate!=='۰۰۰۰/۰۰/۰۰'&&paidDate!=='—'&&paidDate!=='-';let balance='۰';if(hasPaidDate){runningBalance=Math.max(0,runningBalance-principalPerInstallment);balance=fmt(runningBalance);}return[toFa(p.installment_no),fmt(p.amount),toFa(p.due_date),hasPaidDate?toFa(paidDate):'—',p.amount_paid>0?'پرداخت شده':'',balance];});
+const half=Math.ceil(sourceRows.length/2);
+const cellStyle='border:1px solid #111;padding:5px 3px;text-align:center;height:24px;font:10.5px Vazirmatn,Tahoma,Arial,sans-serif;color:#111;background:#fff;white-space:nowrap';
+const headStyle='border:1px solid #111;padding:6px 3px;text-align:center;font:bold 10.5px Vazirmatn,Tahoma,Arial,sans-serif;color:#111;background:#fff;white-space:nowrap';
+const makeTable=list=>'<table dir="rtl" style="width:100%;border-collapse:collapse;table-layout:fixed;direction:rtl;unicode-bidi:embed"><thead><tr>'+['ردیف','تاریخ قسط','مبلغ قسط','تاریخ پرداخت','مانده وام','امضاء دریافت کننده'].map(x=>'<th style="'+headStyle+'">'+x+'</th>').join('')+'</tr></thead><tbody>'+list.map(c=>'<tr>'+[c[0]||'',c[2]||'',c[1]||'',c[3]||'',c[5]||'',''].map(x=>'<td dir="rtl" style="'+cellStyle+'">'+escMsg(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+const meta=el.querySelector('.install-meta')?.textContent||'';
+const renderRoot=document.createElement('div');
+renderRoot.setAttribute('dir','rtl');
+renderRoot.style.cssText='position:fixed;left:0;top:0;width:1120px;min-height:650px;padding:18px;background:#fff;color:#111;direction:rtl;z-index:2147483647;display:block;font-family:Vazirmatn,Tahoma,Arial,sans-serif;';
+const loanName=loanForPdf&&currentView.args[0]?((D.members.find(x=>x.member_id===Number(currentView.args[0]))||{}).name||''):'';
+const summary=loanForPdf?'<table dir="rtl" style="border-collapse:collapse;width:48%;font:10px Vazirmatn,Tahoma,Arial,sans-serif;direction:rtl"><tbody>'+[['نام و نام خانوادگی',loanName],['مبلغ وام',fmt(loanForPdf.amount)+' ریال'],['تعداد اقساط',toFa(loanForPdf.installments)],['مانده وام',fmt(loanForPdf.outstanding||runningBalance)+' ریال'],['مانده حساب سپرده',fmt(loanForPdf.savings)+' ریال'],['تاریخ دریافت وام',toFa(loanForPdf.start_date)],['تاریخ پایان وام',toFa(addJalaliMonths(loanForPdf.start_date,loanForPdf.installments))]].map(r=>'<tr><td style="border:1px solid #111;padding:5px;font-weight:bold;text-align:right">'+escMsg(r[0])+'</td><td style="border:1px solid #111;padding:5px;text-align:right">'+escMsg(r[1])+'</td></tr>').join('')+'</tbody></table>':'<div style="font:10px Vazirmatn,Tahoma,Arial,sans-serif">'+escMsg(meta)+'</div>';
+renderRoot.innerHTML='<div dir="rtl" style="text-align:center;font:bold 15px Vazirmatn,Tahoma,Arial,sans-serif;margin-bottom:8px">دفترچه اقساط وام</div><div dir="rtl" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;direction:rtl">'+makeTable(sourceRows.slice(0,half))+makeTable(sourceRows.slice(half))+'</div><div dir="rtl" style="display:flex;justify-content:flex-start;margin-top:10px;direction:rtl">'+summary+'</div>';
+document.body.appendChild(renderRoot);
+const capture=html2canvas(renderRoot,{scale:2,backgroundColor:'#fff',useCORS:true,logging:false,windowWidth:1200,windowHeight:800,scrollX:0,scrollY:0});
+const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('PDF render timeout')),12000));
+Promise.race([capture,timeout]).then(canvas=>{
+const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:[210,148]});
+const margin=5;const maxW=200,maxH=138;const scale=Math.min(maxW/canvas.width,maxH/canvas.height);const drawW=canvas.width*scale,drawH=canvas.height*scale;pdf.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',margin+(maxW-drawW)/2,margin+(maxH-drawH)/2,drawW,drawH,undefined,'FAST');
+pdf.save('دفترچه-اقساط-'+Date.now()+'.pdf');
+}).catch(err=>{console.error(err);alert('ساخت PDF انجام نشد؛ لطفاً دوباره تلاش کنید');}).finally(()=>{renderRoot.remove();if(btn){btn.disabled=false;btn.innerHTML=old;}});
 }
 
 function jalaliMonthDays(m){return m<=6?31:(m<=11?30:29);}
