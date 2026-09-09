@@ -420,6 +420,12 @@ body{overflow-x:hidden}
 #installBook.mono-export .status-chip .diamond{background:#000!important}
 #installBook.mono-export .install-meta{color:#000;border-color:#000}
 #installBook.mono-export .install-meta b{color:#000}
+@media print{
+  body.printing-book *{visibility:hidden!important}
+  body.printing-book #installBook,body.printing-book #installBook *{visibility:visible!important}
+  body.printing-book #installBook{position:absolute;top:0;left:0;width:100%}
+  @page{size:A5;margin:8mm}
+}
 </style>
 </head>
 <body>
@@ -519,6 +525,10 @@ body{overflow-x:hidden}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="13" rx="1"/><path d="M2 11h20"/><path d="M6 3l6-1 6 1"/></svg>
       <span class="rail-tip">اطلاعات حساب بانکی</span>
     </button>
+    <button class="rail-item" data-rail="profile" onclick="navigateTo(showProfile,[])" title="پروفایل من">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      <span class="rail-tip">پروفایل و مشخصات</span>
+    </button>
     <button class="rail-item" id="reportsRailBtn" data-rail="reports" style="display:none" onclick="navigateTo(showManagementReports,[])" title="گزارشات">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
       <span class="rail-tip">گزارشات مدیریتی</span>
@@ -529,10 +539,6 @@ body{overflow-x:hidden}
       <span class="rail-tip">صندوق پیام</span>
     </button>
     <div class="rail-spacer"></div>
-    <button class="rail-item" onclick="openChangePw()" title="تغییر رمز">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <span class="rail-tip">تغییر رمز</span>
-    </button>
     <button class="rail-item danger" onclick="logout()" title="خروج">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
       <span class="rail-tip">خروج</span>
@@ -547,7 +553,6 @@ body{overflow-x:hidden}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* ============================================================
    منطق برنامه (الگوریتم‌ها و جریان داده بدون تغییر نسبت به نسخه‌های
@@ -1063,7 +1068,26 @@ document.querySelectorAll('.rail-item').forEach(b=>b.classList.remove('active'))
 const btn=document.querySelector('.rail-item[data-rail="'+kind+'"]');
 if(btn)btn.classList.add('active');
 }
-
+const IRAN_BANKS=['بانک ملی ایران','بانک ملت','بانک صادرات ایران','بانک تجارت','بانک سپه','بانک رفاه کارگران','بانک مسکن','بانک کشاورزی','بانک توسعه صادرات ایران','پست بانک ایران','بانک توسعه تعاون','بانک صنعت و معدن','بانک پارسیان','بانک پاسارگاد','بانک سامان','بانک اقتصاد نوین','بانک کارآفرین','بانک سینا','بانک شهر','بانک دی','بانک گردشگری','بانک ایران زمین','بانک خاورمیانه','بانک آینده','بانک سرمایه','بانک ایران‌زمین','بانک قرض‌الحسنه مهر ایران','بانک قرض‌الحسنه رسالت'];
+function profileMember(){const id=Number(document.getElementById('profileMemberId')?.value||U.member_id);return D.members.find(x=>Number(x.member_id)===id)||D.members.find(x=>Number(x.member_id)===Number(U.member_id))||U;}
+function profileInput(label,id,value,required,type){return '<div class="pw-field"><label>'+label+(required?' *':'')+'</label><input id="'+id+'" type="'+(type||'text')+'" value="'+escMsg(value||'')+'" '+(required?'required':'')+'></div>';}
+function fillProfileForm(){const m=profileMember();const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};['name','father_name','birth_certificate_no','national_id','second_phone','address','account_no','iban','card_no'].forEach(k=>set('pf_'+k,m[k]||''));set('pf_phone',m.phone||U.phone||'');set('pf_bank_name',m.bank_name||'');}
+function profileTargetChanged(){fillProfileForm();}
+function showProfile(){
+ currentView={fn:showProfile,args:[]};setActiveRail('profile');let h=userChipHtml();
+ const canManage=isLead(U.role);const opts=canManage?D.members.filter(m=>m.group_id===U.group_id).map(m=>'<option value="'+m.member_id+'">'+escMsg(m.name)+' — '+m.member_id+'</option>').join(''):'<option value="'+U.member_id+'">'+escMsg(U.name)+' — '+U.member_id+'</option>';
+ h+='<div class="page-head"><div class="octostar"><i></i><i></i></div><h2 class="kufi">پروفایل و مشخصات عضو</h2></div><div class="modal-card" style="max-width:760px;margin:0 auto"><div class="modal-sub" style="text-align:right">اطلاعات با کد عضو ذخیره می‌شود و تغییر نام باعث قطع ارتباط سوابق نمی‌شود</div>';
+ if(canManage)h+='<div class="pw-field"><label>انتخاب عضو گروه</label><select id="profileMemberId" onchange="profileTargetChanged()" style="width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px;background:var(--bg);color:var(--ivory);font-family:inherit">'+opts+'</select></div>';else h+='<input type="hidden" id="profileMemberId" value="'+U.member_id+'">';
+ h+='<div class="stat-strip"><div class="stat-cell"><div class="lab">کد عضو</div><div class="val" id="profileCode">'+toFa(U.member_id)+'</div></div><div class="stat-cell"><div class="lab">شماره تماس اصلی</div><div class="val" id="profileMainPhone">'+escMsg(U.phone)+'</div></div></div><form id="profileForm" onsubmit="return false"><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">';
+ h+=profileInput('نام و نام خانوادگی','pf_name','',true)+profileInput('نام پدر','pf_father_name','',true)+profileInput('شماره شناسنامه','pf_birth_certificate_no','',false)+profileInput('کد ملی','pf_national_id','',true,'text')+profileInput('شماره تماس دوم','pf_second_phone','',false,'tel')+profileInput('آدرس','pf_address','',false);
+ h+='</div><div class="dot-divider"><span class="diamond"></span><span>اطلاعات بانکی</span></div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px"><div class="pw-field"><label>نام بانک</label><select id="pf_bank_name" style="width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px;background:var(--bg);color:var(--ivory);font-family:inherit"><option value="">انتخاب بانک</option>'+IRAN_BANKS.map(b=>'<option>'+b+'</option>').join('')+'</select></div>'+profileInput('شماره حساب','pf_account_no','',false)+'</div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px"><div class="pw-field"><label>شماره شبا *</label><div style="display:flex;direction:ltr;align-items:center"><span style="padding:11px 8px;background:var(--bg-3);border:1px solid var(--line-strong);border-left:0;border-radius:10px 0 0 10px;font-weight:700">IR</span><input id="pf_iban_digits" maxlength="24" inputmode="numeric" placeholder="۲۴ رقم بعد از IR" style="direction:ltr;text-align:left;width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:0 10px 10px 0"></div></div><div class="pw-field"><label>شماره کارت *</label><input id="pf_card_digits" maxlength="19" inputmode="numeric" placeholder="۱۲۳۴ ۵۶۷۸ ۹۰۱۲ ۳۴۵۶" style="direction:ltr;text-align:left;width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px"></div></div><button class="btn-solid" id="profileSaveBtn" onclick="saveProfile()">ذخیره اطلاعات</button></form><div class="dot-divider"><span class="diamond"></span><span>تغییر رمز عبور</span></div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">'+profileInput('رمز فعلی','pf_old_password','',false,'password')+profileInput('رمز جدید','pf_new_password','',false,'password')+profileInput('تکرار رمز جدید','pf_new_password2','',false,'password')+'</div><button class="btn-outline" id="inlinePwBtn" onclick="submitInlinePassword()">ثبت تغییر رمز</button></div><div class="site-footer">'+footerHtml()+'</div>';
+ document.getElementById('canvas').innerHTML=h;fillProfileForm();formatProfileFields();
+}
+function normalizeIban(v){v=String(v||'').replace(/\s/g,'').toUpperCase();if(v.startsWith('IR'))v=v.slice(2);return 'IR'+v;}
+function normalizeCard(v){return String(v||'').replace(/\D/g,'');}
+function formatProfileFields(){const m=profileMember();const iban=String(m.iban||'').replace(/^IR/i,'').replace(/\D/g,'');const card=normalizeCard(m.card_no||'');const i=document.getElementById('pf_iban_digits'),c=document.getElementById('pf_card_digits');if(i)i.value=iban;if(c)c.value=card.replace(/(.{4})/g,'$1 ').trim();c?.addEventListener('input',e=>{e.target.value=normalizeCard(e.target.value).slice(0,16).replace(/(.{4})/g,'$1 ').trim();});i?.addEventListener('input',e=>{e.target.value=normalizeCard(e.target.value).slice(0,24);});}
+function saveProfile(){const m=profileMember(),iban=normalizeIban(document.getElementById('pf_iban_digits').value),card=normalizeCard(document.getElementById('pf_card_digits').value);const req=['pf_name','pf_father_name','pf_national_id'].some(id=>!document.getElementById(id).value.trim());if(req||!/^\d{10}$/.test(document.getElementById('pf_national_id').value.replace(/\D/g,''))||!/^IR\d{24}$/.test(iban)||!/^\d{16}$/.test(card)){showUpdateToast('نام، نام پدر، کد ملی، شبا و کارت را با فرمت صحیح وارد کنید');return;}const btn=document.getElementById('profileSaveBtn');btn.disabled=true;btn.innerHTML='در حال ذخیره...';const p={action:'updateMemberProfile',token:getStoredToken(),member_id:m.member_id,name:document.getElementById('pf_name').value.trim(),father_name:document.getElementById('pf_father_name').value.trim(),birth_certificate_no:document.getElementById('pf_birth_certificate_no').value.trim(),national_id:document.getElementById('pf_national_id').value.replace(/\D/g,''),phone:m.phone||U.phone,second_phone:document.getElementById('pf_second_phone').value.trim(),address:document.getElementById('pf_address').value.trim(),bank_name:document.getElementById('pf_bank_name').value,account_no:document.getElementById('pf_account_no').value.trim(),iban:iban,card_no:card};apiCall(p).then(res=>{if(!res||!res.success)throw new Error(res?.message||'ذخیره انجام نشد');const local=D.members.find(x=>Number(x.member_id)===Number(m.member_id));if(local)Object.assign(local,p);if(Number(m.member_id)===Number(U.member_id))U.name=p.name;showUpdateToast('اطلاعات با موفقیت ذخیره شد');}).catch(e=>showUpdateToast(e.message)).finally(()=>{btn.disabled=false;btn.innerHTML='ذخیره اطلاعات';});}
+function submitInlinePassword(){const oldPassword=document.getElementById('pf_old_password').value.trim(),newPassword=document.getElementById('pf_new_password').value.trim(),repeat=document.getElementById('pf_new_password2').value.trim();if(!oldPassword||!newPassword||!repeat||newPassword.length<4||newPassword!==repeat){showUpdateToast('رمزها را کامل و صحیح وارد کنید');return;}const b=document.getElementById('inlinePwBtn');b.disabled=true;b.innerHTML='در حال ثبت...';apiCall({action:'changePassword',token:getStoredToken(),oldPassword:oldPassword,newPassword:newPassword}).then(r=>{if(!r||!r.success)throw new Error(r?.message||'تغییر رمز انجام نشد');saveCredentialToBrowser(U.phone,newPassword);showUpdateToast('رمز تغییر کرد؛ برای ورود بعدی از رمز جدید استفاده کنید');['pf_old_password','pf_new_password','pf_new_password2'].forEach(id=>document.getElementById(id).value='');}).catch(e=>showUpdateToast(e.message)).finally(()=>{b.disabled=false;b.innerHTML='ثبت تغییر رمز';});}
 function showBankInfo(){
 currentView={fn:showBankInfo,args:[]};
 setActiveRail('bank');
@@ -1184,8 +1208,10 @@ document.getElementById('canvas').innerHTML=h;}
 function installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate){
 let h=`<div class="dot-divider"><span class="diamond"></span><span>دفتر اقساط</span></div>
 <div class="book-panel" id="installBook">
-<button class="btn-outline" style="width:auto;margin:0;padding:9px 16px;color:var(--teal-bright);border-color:var(--teal-bright)" onclick="generateInstallmentPdf(this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-left:6px"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>ساخت PDF</button>
+<div class="book-head"><span></span>
+<button class="btn-outline" style="width:auto;margin:0;padding:9px 16px;color:var(--teal-bright);border-color:var(--teal-bright)" onclick="generateInstallmentImage(this)">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-left:6px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>خروجی تصویر</button>
+</div>
 <div class="install-meta"><span>عضو: <b>${m.name}</b> — وام: <b>${fmt(loan.amount)} ریال</b> (${loan.installments.toLocaleString('fa-IR')} قسط)</span><span>شروع: <b>${startDateFa}</b> | پایان: <b>${loanEndDate}</b></span></div>
 <div class="book-wrap"><table><thead><tr><th>قسط</th><th>مبلغ</th><th>سررسید</th><th>تاریخ پرداخت</th><th>وضعیت</th></tr></thead><tbody>`;
 pays.forEach(p=>{
@@ -1216,36 +1242,40 @@ h+='<div class="book-wrap" style="padding:18px;text-align:center;color:var(--mut
 h+=`<div class="site-footer">${footerHtml()}</div>`;
 document.getElementById('canvas').innerHTML=h;}
 
-function generateInstallmentPdf(btn){
+function generateInstallmentImage(btn){
 const el=document.getElementById('installBook');
 if(!el){alert('دفتر اقساط یافت نشد');return;}
-if(typeof html2canvas==='undefined'||typeof window.jspdf==='undefined'){alert('کتابخانه تولید PDF بارگذاری نشده است. اتصال اینترنت خود را بررسی کنید');return;}
-const old=btn?btn.innerHTML:'';if(btn){btn.disabled=true;btn.innerHTML='در حال ساخت PDF...';}
-const loanForPdf=currentView&&currentView.args?getLoan(Number(currentView.args[0])):null;
-let runningBalance=loanForPdf?Number(loanForPdf.amount)||0:0;
-const principalPerInstallment=loanForPdf&&Number(loanForPdf.installments)>0?Number(loanForPdf.amount)/Number(loanForPdf.installments):0;
-const faDigits=s=>String(s||'').replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
-const pdfPayments=loanForPdf?getPay(loanForPdf.loan_id).slice().sort((a,b)=>(Number(a.installment_no)||0)-(Number(b.installment_no)||0)):[];
-const sourceRows=pdfPayments.map(p=>{const paidDate=String(p.paid_date||'').trim();const hasPaidDate=paidDate!==''&&paidDate!=='0'&&paidDate!=='۰۰۰۰/۰۰/۰۰'&&paidDate!=='—'&&paidDate!=='-';let balance='۰';if(hasPaidDate){runningBalance=Math.max(0,runningBalance-principalPerInstallment);balance=fmt(runningBalance);}return[toFa(p.installment_no),fmt(p.amount),toFa(p.due_date),hasPaidDate?toFa(paidDate):'—',p.amount_paid>0?'پرداخت شده':'',balance];});
-const half=Math.ceil(sourceRows.length/2);
-const cellStyle='border:1px solid #111;padding:5px 3px;text-align:center;height:24px;font:10.5px Vazirmatn,Tahoma,Arial,sans-serif;color:#111;background:#fff;white-space:nowrap';
-const headStyle='border:1px solid #111;padding:6px 3px;text-align:center;font:bold 10.5px Vazirmatn,Tahoma,Arial,sans-serif;color:#111;background:#fff;white-space:nowrap';
-const makeTable=list=>'<table dir="rtl" style="width:100%;border-collapse:collapse;table-layout:fixed;direction:rtl;unicode-bidi:embed"><thead><tr>'+['ردیف','تاریخ قسط','مبلغ قسط','تاریخ پرداخت','مانده وام','امضاء دریافت کننده'].map(x=>'<th style="'+headStyle+'">'+x+'</th>').join('')+'</tr></thead><tbody>'+list.map(c=>'<tr>'+[c[0]||'',c[2]||'',c[1]||'',c[3]||'',c[5]||'',''].map(x=>'<td dir="rtl" style="'+cellStyle+'">'+escMsg(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
-const meta=el.querySelector('.install-meta')?.textContent||'';
-const renderRoot=document.createElement('div');
-renderRoot.setAttribute('dir','rtl');
-renderRoot.style.cssText='position:fixed;left:0;top:0;width:1120px;min-height:650px;padding:18px;background:#fff;color:#111;direction:rtl;z-index:2147483647;display:block;font-family:Vazirmatn,Tahoma,Arial,sans-serif;';
-const loanName=loanForPdf&&currentView.args[0]?((D.members.find(x=>x.member_id===Number(currentView.args[0]))||{}).name||''):'';
-const summary=loanForPdf?'<table dir="rtl" style="border-collapse:collapse;width:48%;font:10px Vazirmatn,Tahoma,Arial,sans-serif;direction:rtl"><tbody>'+[['نام و نام خانوادگی',loanName],['مبلغ وام',fmt(loanForPdf.amount)+' ریال'],['تعداد اقساط',toFa(loanForPdf.installments)],['مانده وام',fmt(loanForPdf.outstanding||runningBalance)+' ریال'],['مانده حساب سپرده',fmt(loanForPdf.savings)+' ریال'],['تاریخ دریافت وام',toFa(loanForPdf.start_date)],['تاریخ پایان وام',toFa(addJalaliMonths(loanForPdf.start_date,loanForPdf.installments))]].map(r=>'<tr><td style="border:1px solid #111;padding:5px;font-weight:bold;text-align:right">'+escMsg(r[0])+'</td><td style="border:1px solid #111;padding:5px;text-align:right">'+escMsg(r[1])+'</td></tr>').join('')+'</tbody></table>':'<div style="font:10px Vazirmatn,Tahoma,Arial,sans-serif">'+escMsg(meta)+'</div>';
-renderRoot.innerHTML='<div dir="rtl" style="text-align:center;font:bold 15px Vazirmatn,Tahoma,Arial,sans-serif;margin-bottom:8px">دفترچه اقساط وام</div><div dir="rtl" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;direction:rtl">'+makeTable(sourceRows.slice(0,half))+makeTable(sourceRows.slice(half))+'</div><div dir="rtl" style="display:flex;justify-content:flex-start;margin-top:10px;direction:rtl">'+summary+'</div>';
-document.body.appendChild(renderRoot);
-const capture=html2canvas(renderRoot,{scale:2,backgroundColor:'#fff',useCORS:true,logging:false,windowWidth:1200,windowHeight:800,scrollX:0,scrollY:0});
-const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('PDF render timeout')),12000));
-Promise.race([capture,timeout]).then(canvas=>{
-const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:[210,148]});
-const margin=5;const maxW=200,maxH=138;const scale=Math.min(maxW/canvas.width,maxH/canvas.height);const drawW=canvas.width*scale,drawH=canvas.height*scale;pdf.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',margin+(maxW-drawW)/2,margin+(maxH-drawH)/2,drawW,drawH,undefined,'FAST');
-pdf.save('دفترچه-اقساط-'+Date.now()+'.pdf');
-}).catch(err=>{console.error(err);alert('ساخت PDF انجام نشد؛ لطفاً دوباره تلاش کنید');}).finally(()=>{renderRoot.remove();if(btn){btn.disabled=false;btn.innerHTML=old;}});
+if(typeof html2canvas==='undefined'){alert('کتابخانه تولید تصویر بارگذاری نشده است. اتصال اینترنت خود را بررسی کنید');return;}
+const prevLabel=btn?btn.innerHTML:'';
+if(btn){btn.disabled=true;btn.innerHTML='در حال تولید تصویر...';}
+el.classList.add('mono-export');
+setTimeout(function(){
+html2canvas(el,{scale:3,backgroundColor:'#ffffff',useCORS:true}).then(function(canvas){
+el.classList.remove('mono-export');
+if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
+const A5_W=1748,A5_H=2480;
+const a5Canvas=document.createElement('canvas');
+a5Canvas.width=A5_W;a5Canvas.height=A5_H;
+const ctx=a5Canvas.getContext('2d');
+ctx.fillStyle='#ffffff';
+ctx.fillRect(0,0,A5_W,A5_H);
+const margin=40;
+const availW=A5_W-margin*2,availH=A5_H-margin*2;
+const scale=Math.min(availW/canvas.width,availH/canvas.height,1);
+const drawW=canvas.width*scale,drawH=canvas.height*scale;
+const dx=(A5_W-drawW)/2,dy=(A5_H-drawH)/2;
+ctx.drawImage(canvas,dx,dy,drawW,drawH);
+const link=document.createElement('a');
+link.download='installment-book-'+Date.now()+'.jpg';
+link.href=a5Canvas.toDataURL('image/jpeg',0.92);
+document.body.appendChild(link); link.click(); link.remove();
+}).catch(function(err){
+el.classList.remove('mono-export');
+if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
+console.error('خطا در تولید تصویر دفتر اقساط:',err);
+alert('خطا در تولید تصویر. لطفاً دوباره تلاش کنید');
+});
+},60);
 }
 
 function jalaliMonthDays(m){return m<=6?31:(m<=11?30:29);}
