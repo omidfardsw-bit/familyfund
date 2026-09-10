@@ -197,7 +197,7 @@ body{
   transform:scaleX(0);transform-origin:right;transition:transform .25s var(--ease)}
 .roster-card:hover{transform:translateY(-3px);border-color:var(--teal-bright);box-shadow:0 14px 28px rgba(20,50,45,.10)}
 .roster-card:hover::before{transform:scaleX(1)}
-.roster-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
+.roster-top{display:flex;justify-content:space-between;align-items:flex-start;gap:7px;margin-bottom:8px}
 .roster-name{font-weight:700;font-size:.94rem}
 .roster-role{font-size:.68rem;color:var(--muted);margin-top:2px}
 .roster-due{text-align:left}
@@ -217,6 +217,7 @@ body{
 .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px}
 .metric-card{background:var(--bg-2);border:1px solid var(--line-strong);border-radius:var(--radius);padding:15px 17px;transition:all .2s var(--ease)}
 .metric-card:hover{border-color:var(--teal-bright);transform:translateY(-2px)}
+.metric-card.report-active{background:linear-gradient(135deg,rgba(47,158,143,.42),rgba(204,154,61,.2));border:2px solid var(--teal-bright);box-shadow:0 0 0 3px rgba(47,158,143,.16),0 8px 22px rgba(0,0,0,.18);transform:translateY(-2px)}
 .metric-card.emph{background:linear-gradient(135deg,rgba(47,158,143,.22),rgba(204,154,61,.12));border-color:var(--teal-bright)}
 .mlab{font-size:.68rem;color:var(--muted);margin-bottom:5px}
 .mval{font-size:1.05rem;font-weight:700}
@@ -1195,7 +1196,7 @@ h+=`<div class="progress-box">
 <span>پایان وام: <b>${loanEndDate}</b></span>
 </div>
 </div></div>`;
-h+=installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate);}
+window.currentInstallmentExport={m:m,loan:loan,pays:pays,startDateFa:startDateFa,loanEndDate:loanEndDate};h+=installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate);}
 
 if(ml.length>0){
 h+=`<div class="dot-divider"><span class="diamond"></span><span>صورتحساب</span></div>
@@ -1216,7 +1217,7 @@ let h=`<div class="dot-divider"><span class="diamond"></span><span>دفتر اق
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-left:6px"><path d="M6 2h9l4 4v16H6z"/><path d="M15 2v5h5M9 14h6M9 18h6"/></svg>دانلود PDF</button>
 </div>
 <div class="install-meta"><span>عضو: <b>${m.name}</b> — وام: <b>${fmt(loan.amount)} ریال</b> (${loan.installments.toLocaleString('fa-IR')} قسط)</span><span>شروع: <b>${startDateFa}</b> | پایان: <b>${loanEndDate}</b></span></div>
-<div class="book-wrap"><table><thead><tr><th>مانده وام</th><th>وضعیت</th><th>تاریخ پرداخت</th><th>مبلغ قسط</th><th>تاریخ قسط</th><th>ردیف</th></tr></thead><tbody>`;
+<div class="book-wrap"><table><thead><tr><th>ردیف</th><th>تاریخ قسط</th><th>مبلغ قسط</th><th>تاریخ پرداخت</th><th>وضعیت</th><th>مانده وام</th></tr></thead><tbody>`;
 let runningBalance=Number(loan.amount)||0;
 const orderedPays=pays.slice().sort((a,b)=>(Number(a.installment_no)||0)-(Number(b.installment_no)||0));
 const principalPerInstallment=Number(loan.installments)>0?((Number(loan.amount)||0)/Number(loan.installments)):((orderedPays.length)?((Number(loan.amount)||0)/orderedPays.length):0);
@@ -1225,8 +1226,8 @@ const rawPaidDate=String(p.paid_date===null||p.paid_date===undefined?'':p.paid_d
 const hasPaidDate=rawPaidDate!==''&&rawPaidDate!=='0'&&rawPaidDate!=='۰۰۰۰/۰۰/۰۰'&&rawPaidDate!=='—'&&rawPaidDate!=='-';
 const paid=hasPaidDate;const overdue=!paid&&p.due_date<=getCutoffDate();
 const cls=paid?'paid':overdue?'overdue':'upcoming';const txt=paid?'پرداخت شده':overdue?'معوق':'آینده';
-h+=`<tr><td>${paid?fmt(runningBalance):'۰'}</td><td><span class="status-chip ${cls}"><span class="diamond"></span>${txt}</span></td><td>${hasPaidDate?toFa(rawPaidDate):'—'}</td><td>${fmt(p.amount)}</td><td>${toFa(p.due_date)}</td><td>${Number(p.installment_no||0).toLocaleString('fa-IR')}</td></tr>`;
-if(paid)runningBalance=Math.max(0,runningBalance-principalPerInstallment);});
+if(paid)runningBalance=Math.max(0,runningBalance-(Number(p.amount)||principalPerInstallment));h+=`<tr><td>${paid?fmt(runningBalance):'۰'}</td><td><span class="status-chip ${cls}"><span class="diamond"></span>${txt}</span></td><td>${hasPaidDate?toFa(rawPaidDate):'—'}</td><td>${fmt(p.amount)}</td><td>${toFa(p.due_date)}</td><td>${Number(p.installment_no||0).toLocaleString('fa-IR')}</td></tr>`;
+});
 h+=`</tbody></table></div></div>`;
 return h;
 }
@@ -1243,7 +1244,7 @@ if(loan&&loan.loan_id){
 const pays=getPay(loan.loan_id);
 const startDateFa=toFa(loan.start_date);
 const loanEndDate=toFa(addJalaliMonths(loan.start_date,loan.installments));
-h+=installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate);
+window.currentInstallmentExport={m:m,loan:loan,pays:pays,startDateFa:startDateFa,loanEndDate:loanEndDate};h+=installmentBookSectionHtml(m,loan,pays,startDateFa,loanEndDate);
 }else{
 h+='<div class="book-wrap" style="padding:18px;text-align:center;color:var(--muted);font-size:.85rem">وامی برای این عضو ثبت نشده است</div>';
 }
@@ -1251,39 +1252,20 @@ h+=`<div class="site-footer">${footerHtml()}</div>`;
 document.getElementById('canvas').innerHTML=h;}
 
 function generateInstallmentImage(btn){
-const el=document.getElementById('installBook');
-if(!el){alert('دفتر اقساط یافت نشد');return;}
-if(typeof html2canvas==='undefined'){alert('کتابخانه تولید تصویر بارگذاری نشده است. اتصال اینترنت خود را بررسی کنید');return;}
-const prevLabel=btn?btn.innerHTML:'';
-if(btn){btn.disabled=true;btn.innerHTML='در حال تولید PDF...';}
-el.classList.add('mono-export');
-setTimeout(function(){
-html2canvas(el,{scale:3,backgroundColor:'#ffffff',useCORS:true}).then(function(canvas){
-el.classList.remove('mono-export');
-if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
-const A5_W=2480,A5_H=1748;
-const a5Canvas=document.createElement('canvas');
-a5Canvas.width=A5_W;a5Canvas.height=A5_H;
-const ctx=a5Canvas.getContext('2d');
-ctx.fillStyle='#ffffff';
-ctx.fillRect(0,0,A5_W,A5_H);
-const margin=40;
-const availW=A5_W-margin*2,availH=A5_H-margin*2;
-const scale=Math.min(availW/canvas.width,availH/canvas.height,1);
-const drawW=canvas.width*scale,drawH=canvas.height*scale;
-const dx=(A5_W-drawW)/2,dy=(A5_H-drawH)/2;
-ctx.drawImage(canvas,dx,dy,drawW,drawH);
-if(!window.jspdf||!window.jspdf.jsPDF)throw new Error('PDF library unavailable');
-const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:'a5',compress:true});
-pdf.addImage(a5Canvas.toDataURL('image/jpeg',0.94),'JPEG',0,0,210,148);
-pdf.save('دفترچه-اقساط-'+Date.now()+'.pdf');
-}).catch(function(err){
-el.classList.remove('mono-export');
-if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
-console.error('خطا در تولید تصویر دفتر اقساط:',err);
-alert('خطا در تولید تصویر. لطفاً دوباره تلاش کنید');
-});
-},60);
+  const data=window.currentInstallmentExport;
+  if(!data||!data.loan){alert('اطلاعات دفتر اقساط یافت نشد');return;}
+  if(typeof html2canvas==='undefined'||!window.jspdf||!window.jspdf.jsPDF){alert('کتابخانه تولید PDF بارگذاری نشده است');return;}
+  const prevLabel=btn?btn.innerHTML:'';
+  if(btn){btn.disabled=true;btn.innerHTML='در حال ساخت PDF...';}
+  const m=data.m,loan=data.loan,pays=data.pays.slice().sort((a,b)=>(Number(a.installment_no)||0)-(Number(b.installment_no)||0));
+  let running=Number(loan.amount)||0;
+  const principal=Number(loan.installments)>0?(Number(loan.amount)||0)/Number(loan.installments):(pays.length?(Number(loan.amount)||0)/pays.length:0);
+  const money=n=>fmt(Number(n)||0);
+  const rows=pays.map(p=>{const paidDate=String(p.paid_date??'').trim();const hasDate=paidDate!==''&&paidDate!=='0'&&paidDate!=='۰۰۰۰/۰۰/۰۰'&&paidDate!=='—'&&paidDate!=='-';const paid=hasDate,overdue=!paid&&p.due_date<=getCutoffDate();const label=paid?'پرداخت شده':overdue?'معوق':'آینده';if(paid)running=Math.max(0,running-(Number(p.amount)||principal));const balance=paid?money(running):'۰';return `<tr><td>${Number(p.installment_no||0).toLocaleString('fa-IR')}</td><td>${toFa(p.due_date)}</td><td>${money(p.amount)}</td><td>${hasDate?toFa(paidDate):'—'}</td><td><span class="status ${paid?'paid':overdue?'overdue':'future'}">${label}</span></td><td class="balance">${balance}</td></tr>`;}).join('');
+  const page=document.createElement('div');const pageHeight=1120;page.dir='rtl';page.style.cssText='position:fixed;left:-20000px;top:0;width:790px;height:'+pageHeight+'px;background:#fff;color:#172b35;z-index:-1;overflow:visible;font-family:Tahoma,Arial,sans-serif;direction:rtl;';
+  page.innerHTML=`<style>.xpage{box-sizing:border-box;width:790px;height:1120px;padding:32px 30px;background:#fff;direction:rtl;display:flex;flex-direction:column}.xhead{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1d746e;padding-bottom:9px;margin-bottom:9px}.xtitle{font-size:25px;font-weight:800;color:#155f5d;margin:0 0 7px}.xsub{font-size:12px;color:#56656a}.xbrand{font-size:15px;font-weight:700;color:#b07b22;border:2px solid #c79a4f;border-radius:8px;padding:8px 14px}.xinfo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.xbox{border:1px solid #b8c8c8;border-radius:7px;padding:6px 9px;background:#f4f8f7;font-size:11px}.xbox b{display:block;color:#65757a;font-size:9px;margin-bottom:2px}.xbox strong{font-size:12px;color:#173c45}.xtable{width:100%;border-collapse:collapse;table-layout:fixed;direction:rtl;font-size:${pays.length>18?'11px':'14px'}}.xtable th{background:#176e69;color:#fff;font-weight:700;padding:${pays.length>18?'5px 3px':'9px 4px'};border:1px solid #125b57}.xtable td{text-align:center;padding:${pays.length>18?'3px 2px':'7px 3px'};border:1px solid #b7c5c7;color:#203b43;height:${pays.length>18?'20px':'27px'}}.xtable tr:nth-child(even) td{background:#f1f6f5}.xtable .balance{font-weight:700;color:#155f5d}.status{display:inline-block;border-radius:12px;padding:4px 8px;font-size:11px;border:1px solid}.status.paid{color:#18705c;border-color:#70b99a;background:#e7f6ee}.status.overdue{color:#a44339;border-color:#d69087;background:#fff0ee}.status.future{color:#8a6c20;border-color:#d9bd70;background:#fff8df}.xfoot{font-size:${pays.length>18?'9px':'11px'};margin-top:auto;border-top:1px solid #c9d3d4;padding-top:5px;display:flex;justify-content:space-between;color:#68777b;font-size:11px}</style><div class="xpage"><div class="xhead"><div><h1 class="xtitle">دفترچه اقساط</h1><div class="xsub">برنامه صندوق قرض‌الحسنه</div></div><div class="xbrand">دفتر اقساط</div></div><div class="xinfo"><div class="xbox"><b>نام عضو</b><strong>${m.name||'—'}</strong></div><div class="xbox"><b>مبلغ وام</b><strong>${money(loan.amount)} ریال</strong></div><div class="xbox"><b>تعداد اقساط</b><strong>${Number(loan.installments||0).toLocaleString('fa-IR')} قسط</strong></div><div class="xbox"><b>دوره وام</b><strong>${toFa(data.startDateFa)} تا ${toFa(data.loanEndDate)}</strong></div></div><table class="xtable"><colgroup><col style="width:12%"><col style="width:18%"><col style="width:18%"><col style="width:20%"><col style="width:14%"><col style="width:18%"></colgroup><thead><tr><th>ردیف</th><th>تاریخ قسط</th><th>مبلغ قسط</th><th>تاریخ پرداخت</th><th>وضعیت</th><th>مانده وام</th></tr></thead><tbody>${rows}</tbody></table><div class="xfoot"><span>این دفترچه بر اساس اطلاعات ثبت‌شده در سامانه صادر شده است.</span><span>تاریخ تهیه: ${toFa(getCutoffDate())}</span></div></div>`;
+  document.body.appendChild(page);const canvasEl=page.querySelector('.xpage');
+  setTimeout(()=>html2canvas(canvasEl,{scale:2,backgroundColor:'#fff',width:790,height:pageHeight,windowWidth:790,windowHeight:pageHeight,useCORS:true}).then(canvas=>{const pdf=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a5',compress:true});pdf.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',0,0,148,210);const safeName=String(m.name||'عضو').replace(/[\/:*?"<>|]/g,'-').trim()||'عضو';pdf.save('دفتر اقساط('+safeName+').pdf');}).catch(e=>{console.error(e);alert('خطا در ساخت PDF دفترچه اقساط');}).finally(()=>{page.remove();if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}}),80);
 }
 
 function jalaliMonthDays(m){return m<=6?31:(m<=11?30:29);}
@@ -1379,8 +1361,8 @@ function memberDueInfo(mid){
  return{date:chosen.due_date,label:(overdue?'معوق: ':'')+toFa(chosen.due_date),overdue:overdue,amount:Number(chosen.amount)||0};
 }
 function reportCardClick(kind){
- if(kind==='bank'){window.reportFocus='all';showManagementReports();setTimeout(()=>document.getElementById('report-bank-balance')?.scrollIntoView({behavior:'smooth',block:'start'}),50);return;}
- if(kind==='overdue'){window.reportFocus='all';showManagementReports();setTimeout(()=>document.getElementById('report-overdue-list')?.scrollIntoView({behavior:'smooth',block:'start'}),50);return;}
+ if(kind==='bank'){window.reportFocus='bank';showManagementReports();setTimeout(()=>document.getElementById('report-bank-balance')?.scrollIntoView({behavior:'smooth',block:'start'}),50);return;}
+ if(kind==='overdue'){window.reportFocus='overdue';showManagementReports();setTimeout(()=>document.getElementById('report-overdue-list')?.scrollIntoView({behavior:'smooth',block:'start'}),50);return;}
  window.reportFocus=kind==='active'?'active':'all';showManagementReports();setTimeout(()=>document.getElementById('report-member-list')?.scrollIntoView({behavior:'smooth',block:'start'}),50);
 }
 function showManagementReports(){
@@ -1425,12 +1407,12 @@ const expenseMg=Number(timeCell('B',4))||0;
 const bankBalanceMg=(sumSavingsMg+profitReserveMg+incomeMg)-(sumOutstandingMg+expenseMg);
 
 h+='<div class="metric-grid">'+
-'<div class="metric-card emph" onclick="reportCardClick(\'all\')" style="cursor:pointer"><div class="mlab">اعضای دارای موجودی حساب</div><div class="mval">'+totalMembersWithBal.toLocaleString('fa-IR')+' نفر</div></div>'+ 
-'<div class="metric-card" onclick="reportCardClick(\'active\')" style="cursor:pointer"><div class="mlab">وام‌های فعال</div><div class="mval">'+activeLoans.length.toLocaleString('fa-IR')+' وام<small>'+fmt(totalLoanAmount)+' ریال</small></div></div>'+ 
-'<div class="metric-card" onclick="reportCardClick(\'overdue\')" style="cursor:pointer"><div class="mlab">اعضای دارای قسط معوق</div><div class="mval neg">'+overdueMembers.toLocaleString('fa-IR')+' نفر<small>'+fmt(overdueAmt)+' ریال</small></div></div>'+ 
+'<div class="metric-card emph '+(reportFocus==='all'?'report-active':'')+'" onclick="reportCardClick(\'all\')" style="cursor:pointer"><div class="mlab">اعضای دارای موجودی حساب</div><div class="mval">'+totalMembersWithBal.toLocaleString('fa-IR')+' نفر</div></div>'+ 
+'<div class="metric-card '+(reportFocus==='active'?'report-active':'')+'" onclick="reportCardClick(\'active\')" style="cursor:pointer"><div class="mlab">وام‌های فعال</div><div class="mval">'+activeLoans.length.toLocaleString('fa-IR')+' وام<small>'+fmt(totalLoanAmount)+' ریال</small></div></div>'+ 
+'<div class="metric-card '+(reportFocus==='overdue'?'report-active':'')+'" onclick="reportCardClick(\'overdue\')" style="cursor:pointer"><div class="mlab">اعضای دارای قسط معوق</div><div class="mval neg">'+overdueMembers.toLocaleString('fa-IR')+' نفر<small>'+fmt(overdueAmt)+' ریال</small></div></div>'+ 
 '<div class="metric-card"><div class="mlab">پیش‌بینی اقساط ماه آینده</div><div class="mval amb">'+fmt(forecastInstallSum)+' ریال<small>میانگین سررسید: '+avgDue+'</small></div></div>'+ 
 '<div class="metric-card"><div class="mlab">پیش‌بینی پس‌انداز اجباری ماه آینده</div><div class="mval">'+fmt(forecastSavingSum)+' ریال</div></div>'+ 
-'<div class="metric-card emph" onclick="reportCardClick(\'bank\')" style="cursor:pointer"><div class="mlab">موجودی بانک</div><div class="mval">'+fmt(bankBalanceMg)+' ریال</div></div>'+ 
+'<div class="metric-card emph '+(reportFocus==='bank'?'report-active':'')+'" onclick="reportCardClick(\'bank\')" style="cursor:pointer"><div class="mlab">موجودی بانک</div><div class="mval">'+fmt(bankBalanceMg)+' ریال</div></div>'+ 
 '</div>';
 
  // داشبورد تحلیلی: ترکیب وام و ریسک وصول
