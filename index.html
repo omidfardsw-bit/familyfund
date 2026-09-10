@@ -553,6 +553,7 @@ body{overflow-x:hidden}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* ============================================================
    منطق برنامه (الگوریتم‌ها و جریان داده بدون تغییر نسبت به نسخه‌های
@@ -1072,16 +1073,18 @@ const IRAN_BANKS=['بانک ملی ایران','بانک ملت','بانک صا�
 function profileMember(){const id=Number(document.getElementById('profileMemberId')?.value||U.member_id);return D.members.find(x=>Number(x.member_id)===id)||D.members.find(x=>Number(x.member_id)===Number(U.member_id))||U;}
 function profileInput(label,id,value,required,type){return '<div class="pw-field"><label>'+label+(required?' *':'')+'</label><input id="'+id+'" type="'+(type||'text')+'" value="'+escMsg(value||'')+'" '+(required?'required':'')+'></div>';}
 function fillProfileForm(){const m=profileMember();const set=(id,v)=>{const e=document.getElementById(id);if(e)e.value=v||'';};['name','father_name','birth_certificate_no','national_id','second_phone','address','account_no','iban','card_no'].forEach(k=>set('pf_'+k,m[k]||''));set('pf_phone',m.phone||U.phone||'');set('pf_bank_name',m.bank_name||'');}
-function profileTargetChanged(){fillProfileForm();}
+function profileTargetChanged(){fillProfileForm();formatProfileFields();const code=document.getElementById('profileCode'),phone=document.getElementById('profileMainPhone'),m=profileMember();if(code)code.textContent=toFa(m.member_id);if(phone)phone.textContent=m.phone||'';setProfileEdit(false);}
+function setProfileEdit(enabled){['pf_name','pf_father_name','pf_birth_certificate_no','pf_national_id','pf_second_phone','pf_address','pf_account_no','pf_iban_digits','pf_card_digits','pf_old_password','pf_new_password','pf_new_password2'].forEach(id=>{const e=document.getElementById(id);if(e)e.disabled=!enabled;});const bank=document.getElementById('pf_bank_name');if(bank)bank.disabled=!enabled;const save=document.getElementById('profileSaveBtn'),pw=document.getElementById('inlinePwBtn'),edit=document.getElementById('profileEditBtn');if(save)save.disabled=!enabled;if(pw)pw.disabled=!enabled;if(edit)edit.textContent=enabled?'لغو ویرایش':'ویرایش اطلاعات';}
+function toggleProfileEdit(){const e=document.getElementById('profileEditBtn');setProfileEdit(!(e&&e.textContent.indexOf('لغو')>=0));}
 function showProfile(){
  currentView={fn:showProfile,args:[]};setActiveRail('profile');let h=userChipHtml();
  const canManage=isLead(U.role);const opts=canManage?D.members.filter(m=>m.group_id===U.group_id).map(m=>'<option value="'+m.member_id+'">'+escMsg(m.name)+' — '+m.member_id+'</option>').join(''):'<option value="'+U.member_id+'">'+escMsg(U.name)+' — '+U.member_id+'</option>';
- h+='<div class="page-head"><div class="octostar"><i></i><i></i></div><h2 class="kufi">پروفایل و مشخصات عضو</h2></div><div class="modal-card" style="max-width:760px;margin:0 auto"><div class="modal-sub" style="text-align:right">اطلاعات با کد عضو ذخیره می‌شود و تغییر نام باعث قطع ارتباط سوابق نمی‌شود</div>';
+ h+='<div class="page-head"><div class="octostar"><i></i><i></i></div><h2 class="kufi">پروفایل و مشخصات عضو</h2></div><div class="modal-card" style="max-width:760px;margin:0 auto">';
  if(canManage)h+='<div class="pw-field"><label>انتخاب عضو گروه</label><select id="profileMemberId" onchange="profileTargetChanged()" style="width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px;background:var(--bg);color:var(--ivory);font-family:inherit">'+opts+'</select></div>';else h+='<input type="hidden" id="profileMemberId" value="'+U.member_id+'">';
  h+='<div class="stat-strip"><div class="stat-cell"><div class="lab">کد عضو</div><div class="val" id="profileCode">'+toFa(U.member_id)+'</div></div><div class="stat-cell"><div class="lab">شماره تماس اصلی</div><div class="val" id="profileMainPhone">'+escMsg(U.phone)+'</div></div></div><form id="profileForm" onsubmit="return false"><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">';
  h+=profileInput('نام و نام خانوادگی','pf_name','',true)+profileInput('نام پدر','pf_father_name','',true)+profileInput('شماره شناسنامه','pf_birth_certificate_no','',false)+profileInput('کد ملی','pf_national_id','',true,'text')+profileInput('شماره تماس دوم','pf_second_phone','',false,'tel')+profileInput('آدرس','pf_address','',false);
- h+='</div><div class="dot-divider"><span class="diamond"></span><span>اطلاعات بانکی</span></div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px"><div class="pw-field"><label>نام بانک</label><select id="pf_bank_name" style="width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px;background:var(--bg);color:var(--ivory);font-family:inherit"><option value="">انتخاب بانک</option>'+IRAN_BANKS.map(b=>'<option>'+b+'</option>').join('')+'</select></div>'+profileInput('شماره حساب','pf_account_no','',false)+'</div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px"><div class="pw-field"><label>شماره شبا *</label><div style="display:flex;direction:ltr;align-items:center"><span style="padding:11px 8px;background:var(--bg-3);border:1px solid var(--line-strong);border-left:0;border-radius:10px 0 0 10px;font-weight:700">IR</span><input id="pf_iban_digits" maxlength="24" inputmode="numeric" placeholder="۲۴ رقم بعد از IR" style="direction:ltr;text-align:left;width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:0 10px 10px 0"></div></div><div class="pw-field"><label>شماره کارت *</label><input id="pf_card_digits" maxlength="19" inputmode="numeric" placeholder="۱۲۳۴ ۵۶۷۸ ۹۰۱۲ ۳۴۵۶" style="direction:ltr;text-align:left;width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px"></div></div><button class="btn-solid" id="profileSaveBtn" onclick="saveProfile()">ذخیره اطلاعات</button></form><div class="dot-divider"><span class="diamond"></span><span>تغییر رمز عبور</span></div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">'+profileInput('رمز فعلی','pf_old_password','',false,'password')+profileInput('رمز جدید','pf_new_password','',false,'password')+profileInput('تکرار رمز جدید','pf_new_password2','',false,'password')+'</div><button class="btn-outline" id="inlinePwBtn" onclick="submitInlinePassword()">ثبت تغییر رمز</button></div><div class="site-footer">'+footerHtml()+'</div>';
- document.getElementById('canvas').innerHTML=h;fillProfileForm();formatProfileFields();
+ h+='</div><div class="dot-divider"><span class="diamond"></span><span>اطلاعات بانکی</span></div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px"><div class="pw-field"><label>نام بانک</label><select id="pf_bank_name" style="width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px;background:var(--bg);color:var(--ivory);font-family:inherit"><option value="">انتخاب بانک</option>'+IRAN_BANKS.map(b=>'<option>'+b+'</option>').join('')+'</select></div>'+profileInput('شماره حساب','pf_account_no','',false)+'</div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px"><div class="pw-field"><label>شماره شبا *</label><div style="display:flex;direction:ltr;align-items:center"><span style="padding:11px 8px;background:var(--bg-3);border:1px solid var(--line-strong);border-left:0;border-radius:10px 0 0 10px;font-weight:700">IR</span><input id="pf_iban_digits" maxlength="24" inputmode="numeric" style="direction:ltr;text-align:left;width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:0 10px 10px 0"></div></div><div class="pw-field"><label>شماره کارت *</label><input id="pf_card_digits" maxlength="19" inputmode="numeric" style="direction:ltr;text-align:left;width:100%;padding:11px;border:1px solid var(--line-strong);border-radius:10px"></div></div><div style="display:flex;gap:8px;justify-content:flex-start;align-items:center"><button class="btn-outline" id="profileEditBtn" onclick="toggleProfileEdit()" style="width:auto;padding:8px 16px">ویرایش اطلاعات</button><button class="btn-solid" id="profileSaveBtn" onclick="saveProfile()" style="width:auto;padding:8px 16px">ذخیره اطلاعات</button></div></form><div class="dot-divider"><span class="diamond"></span><span>تغییر رمز عبور</span></div><div class="roster-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">'+profileInput('رمز فعلی','pf_old_password','',false,'password')+profileInput('رمز جدید','pf_new_password','',false,'password')+profileInput('تکرار رمز جدید','pf_new_password2','',false,'password')+'</div><button class="btn-outline" id="inlinePwBtn" onclick="submitInlinePassword()" style="width:auto;padding:8px 16px">ثبت تغییر رمز</button></div><div class="site-footer">'+footerHtml()+'</div>';
+ document.getElementById('canvas').innerHTML=h;fillProfileForm();formatProfileFields();setProfileEdit(false);
 }
 function normalizeIban(v){v=String(v||'').replace(/\s/g,'').toUpperCase();if(v.startsWith('IR'))v=v.slice(2);return 'IR'+v;}
 function normalizeCard(v){return String(v||'').replace(/\D/g,'');}
@@ -1210,15 +1213,20 @@ let h=`<div class="dot-divider"><span class="diamond"></span><span>دفتر اق
 <div class="book-panel" id="installBook">
 <div class="book-head"><span></span>
 <button class="btn-outline" style="width:auto;margin:0;padding:9px 16px;color:var(--teal-bright);border-color:var(--teal-bright)" onclick="generateInstallmentImage(this)">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-left:6px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>خروجی تصویر</button>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-left:6px"><path d="M6 2h9l4 4v16H6z"/><path d="M15 2v5h5M9 14h6M9 18h6"/></svg>دانلود PDF</button>
 </div>
 <div class="install-meta"><span>عضو: <b>${m.name}</b> — وام: <b>${fmt(loan.amount)} ریال</b> (${loan.installments.toLocaleString('fa-IR')} قسط)</span><span>شروع: <b>${startDateFa}</b> | پایان: <b>${loanEndDate}</b></span></div>
-<div class="book-wrap"><table><thead><tr><th>قسط</th><th>مبلغ</th><th>سررسید</th><th>تاریخ پرداخت</th><th>وضعیت</th></tr></thead><tbody>`;
-pays.forEach(p=>{
-const paid=p.amount_paid>0;const overdue=!paid&&p.due_date<=getCutoffDate();
+<div class="book-wrap"><table><thead><tr><th>مانده وام</th><th>وضعیت</th><th>تاریخ پرداخت</th><th>مبلغ قسط</th><th>تاریخ قسط</th><th>ردیف</th></tr></thead><tbody>`;
+let runningBalance=Number(loan.amount)||0;
+const orderedPays=pays.slice().sort((a,b)=>(Number(a.installment_no)||0)-(Number(b.installment_no)||0));
+const principalPerInstallment=Number(loan.installments)>0?((Number(loan.amount)||0)/Number(loan.installments)):((orderedPays.length)?((Number(loan.amount)||0)/orderedPays.length):0);
+orderedPays.forEach(p=>{
+const rawPaidDate=String(p.paid_date===null||p.paid_date===undefined?'':p.paid_date).trim();
+const hasPaidDate=rawPaidDate!==''&&rawPaidDate!=='0'&&rawPaidDate!=='۰۰۰۰/۰۰/۰۰'&&rawPaidDate!=='—'&&rawPaidDate!=='-';
+const paid=hasPaidDate;const overdue=!paid&&p.due_date<=getCutoffDate();
 const cls=paid?'paid':overdue?'overdue':'upcoming';const txt=paid?'پرداخت شده':overdue?'معوق':'آینده';
-h+=`<tr><td>${p.installment_no.toLocaleString('fa-IR')}</td><td>${fmt(p.amount)}</td><td>${toFa(p.due_date)}</td>
-<td>${p.paid_date?toFa(p.paid_date):'—'}</td><td><span class="status-chip ${cls}"><span class="diamond"></span>${txt}</span></td></tr>`;});
+h+=`<tr><td>${paid?fmt(runningBalance):'۰'}</td><td><span class="status-chip ${cls}"><span class="diamond"></span>${txt}</span></td><td>${hasPaidDate?toFa(rawPaidDate):'—'}</td><td>${fmt(p.amount)}</td><td>${toFa(p.due_date)}</td><td>${Number(p.installment_no||0).toLocaleString('fa-IR')}</td></tr>`;
+if(paid)runningBalance=Math.max(0,runningBalance-principalPerInstallment);});
 h+=`</tbody></table></div></div>`;
 return h;
 }
@@ -1247,13 +1255,13 @@ const el=document.getElementById('installBook');
 if(!el){alert('دفتر اقساط یافت نشد');return;}
 if(typeof html2canvas==='undefined'){alert('کتابخانه تولید تصویر بارگذاری نشده است. اتصال اینترنت خود را بررسی کنید');return;}
 const prevLabel=btn?btn.innerHTML:'';
-if(btn){btn.disabled=true;btn.innerHTML='در حال تولید تصویر...';}
+if(btn){btn.disabled=true;btn.innerHTML='در حال تولید PDF...';}
 el.classList.add('mono-export');
 setTimeout(function(){
 html2canvas(el,{scale:3,backgroundColor:'#ffffff',useCORS:true}).then(function(canvas){
 el.classList.remove('mono-export');
 if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
-const A5_W=1748,A5_H=2480;
+const A5_W=2480,A5_H=1748;
 const a5Canvas=document.createElement('canvas');
 a5Canvas.width=A5_W;a5Canvas.height=A5_H;
 const ctx=a5Canvas.getContext('2d');
@@ -1265,10 +1273,10 @@ const scale=Math.min(availW/canvas.width,availH/canvas.height,1);
 const drawW=canvas.width*scale,drawH=canvas.height*scale;
 const dx=(A5_W-drawW)/2,dy=(A5_H-drawH)/2;
 ctx.drawImage(canvas,dx,dy,drawW,drawH);
-const link=document.createElement('a');
-link.download='installment-book-'+Date.now()+'.jpg';
-link.href=a5Canvas.toDataURL('image/jpeg',0.92);
-document.body.appendChild(link); link.click(); link.remove();
+if(!window.jspdf||!window.jspdf.jsPDF)throw new Error('PDF library unavailable');
+const pdf=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:'a5',compress:true});
+pdf.addImage(a5Canvas.toDataURL('image/jpeg',0.94),'JPEG',0,0,210,148);
+pdf.save('دفترچه-اقساط-'+Date.now()+'.pdf');
 }).catch(function(err){
 el.classList.remove('mono-export');
 if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
@@ -1370,6 +1378,11 @@ function memberDueInfo(mid){
  const overdue=chosen.due_date<=cutoff;
  return{date:chosen.due_date,label:(overdue?'معوق: ':'')+toFa(chosen.due_date),overdue:overdue,amount:Number(chosen.amount)||0};
 }
+function reportCardClick(kind){
+ if(kind==='bank'){window.reportFocus='all';showManagementReports();setTimeout(()=>document.getElementById('report-bank-balance')?.scrollIntoView({behavior:'smooth',block:'start'}),50);return;}
+ if(kind==='overdue'){window.reportFocus='all';showManagementReports();setTimeout(()=>document.getElementById('report-overdue-list')?.scrollIntoView({behavior:'smooth',block:'start'}),50);return;}
+ window.reportFocus=kind==='active'?'active':'all';showManagementReports();setTimeout(()=>document.getElementById('report-member-list')?.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
 function showManagementReports(){
 currentView={fn:showManagementReports,args:[]};
 setActiveRail('reports');
@@ -1379,6 +1392,8 @@ h+='<div class="page-head"><div class="octostar"><i></i><i></i></div><h2 class="
 
 const withBal=D.members.filter(m=>{const l=getLoan(m.member_id);return l&&l.savings>0;})
 .sort((a,b)=>{if(a.group_id!==b.group_id)return a.group_id.localeCompare(b.group_id,'fa');return a.name.localeCompare(b.name,'fa');});
+const reportFocus=window.reportFocus||'all';
+const reportMembers=reportFocus==='active'?D.members.filter(m=>{const l=getLoan(m.member_id);return l&&l.loan_id&&Number(l.outstanding)>0;}):reportFocus==='overdue'?D.members.filter(m=>getMemberStats(m.member_id).overdue>0):withBal;
 
 const totalMembersWithBal=withBal.length;
 const activeLoans=D.loans.filter(l=>l.loan_id&&l.outstanding>0);
@@ -1410,12 +1425,12 @@ const expenseMg=Number(timeCell('B',4))||0;
 const bankBalanceMg=(sumSavingsMg+profitReserveMg+incomeMg)-(sumOutstandingMg+expenseMg);
 
 h+='<div class="metric-grid">'+
-'<div class="metric-card emph"><div class="mlab">اعضای دارای موجودی حساب</div><div class="mval">'+totalMembersWithBal.toLocaleString('fa-IR')+' نفر</div></div>'+
-'<div class="metric-card"><div class="mlab">وام‌های فعال</div><div class="mval">'+activeLoans.length.toLocaleString('fa-IR')+' وام<small>'+fmt(totalLoanAmount)+' ریال</small></div></div>'+
-'<div class="metric-card"><div class="mlab">اعضای دارای قسط معوق</div><div class="mval neg">'+overdueMembers.toLocaleString('fa-IR')+' نفر<small>'+fmt(overdueAmt)+' ریال</small></div></div>'+
-'<div class="metric-card"><div class="mlab">پیش‌بینی اقساط ماه آینده</div><div class="mval amb">'+fmt(forecastInstallSum)+' ریال<small>میانگین سررسید: '+avgDue+'</small></div></div>'+
-'<div class="metric-card"><div class="mlab">پیش‌بینی پس‌انداز اجباری ماه آینده</div><div class="mval">'+fmt(forecastSavingSum)+' ریال</div></div>'+
-'<div class="metric-card emph"><div class="mlab">موجودی بانک</div><div class="mval">'+fmt(bankBalanceMg)+' ریال</div></div>'+
+'<div class="metric-card emph" onclick="reportCardClick(\'all\')" style="cursor:pointer"><div class="mlab">اعضای دارای موجودی حساب</div><div class="mval">'+totalMembersWithBal.toLocaleString('fa-IR')+' نفر</div></div>'+ 
+'<div class="metric-card" onclick="reportCardClick(\'active\')" style="cursor:pointer"><div class="mlab">وام‌های فعال</div><div class="mval">'+activeLoans.length.toLocaleString('fa-IR')+' وام<small>'+fmt(totalLoanAmount)+' ریال</small></div></div>'+ 
+'<div class="metric-card" onclick="reportCardClick(\'overdue\')" style="cursor:pointer"><div class="mlab">اعضای دارای قسط معوق</div><div class="mval neg">'+overdueMembers.toLocaleString('fa-IR')+' نفر<small>'+fmt(overdueAmt)+' ریال</small></div></div>'+ 
+'<div class="metric-card"><div class="mlab">پیش‌بینی اقساط ماه آینده</div><div class="mval amb">'+fmt(forecastInstallSum)+' ریال<small>میانگین سررسید: '+avgDue+'</small></div></div>'+ 
+'<div class="metric-card"><div class="mlab">پیش‌بینی پس‌انداز اجباری ماه آینده</div><div class="mval">'+fmt(forecastSavingSum)+' ریال</div></div>'+ 
+'<div class="metric-card emph" onclick="reportCardClick(\'bank\')" style="cursor:pointer"><div class="mlab">موجودی بانک</div><div class="mval">'+fmt(bankBalanceMg)+' ریال</div></div>'+ 
 '</div>';
 
  // داشبورد تحلیلی: ترکیب وام و ریسک وصول
@@ -1428,12 +1443,12 @@ h+='<div class="metric-grid">'+
  h+='<div class="mg-chart-card"><div class="mg-chart-title"><span>وضعیت بازپرداخت وام</span><small>بر اساس اصل وام‌ها</small></div><div class="mg-donut-layout"><div class="mg-donut" style="background:conic-gradient(var(--teal-vivid) 0 '+paidPct+'%,var(--gold-vivid) '+paidPct+'% 100%)"><div class="mg-donut-center"><b>'+toFa(paidPct)+'٪</b><span>پرداخت شده</span></div></div><div class="mg-legend"><div class="mg-legend-row"><span class="mg-legend-dot" style="background:var(--teal-vivid)"></span>پرداخت‌شده <b>'+fmt(repaidPrincipal)+'</b></div><div class="mg-legend-row"><span class="mg-legend-dot" style="background:var(--gold-vivid)"></span>مانده بدهی <b>'+fmt(outstandingPrincipal)+'</b></div><div class="mg-legend-row"><span class="mg-legend-dot" style="background:var(--rose)"></span>ریسک معوق <b>'+toFa(riskPct)+'٪ اعضا</b></div></div></div></div>';
  h+='<div class="mg-chart-card"><div class="mg-chart-title"><span>شاخص ریسک وصول</span><small>نیازمند پیگیری مدیر</small></div><div class="mg-bars"><div class="mg-bar-row"><span>اعضای معوق</span><div class="mg-bar-track"><div class="mg-bar-fill risk" style="width:'+Math.min(100,riskPct)+'%"></div></div><span class="mg-bar-value">'+toFa(overdueMembers)+' نفر</span></div><div class="mg-bar-row"><span>مبلغ معوق</span><div class="mg-bar-track"><div class="mg-bar-fill risk" style="width:'+Math.min(100,overdueAmt/(Math.max(1,sumOutstandingMg)*.5)*100)+'%"></div></div><span class="mg-bar-value">'+fmt(overdueAmt)+'</span></div><div class="mg-bar-row"><span>نقدینگی خالص</span><div class="mg-bar-track"><div class="mg-bar-fill" style="width:'+Math.min(100,Math.max(0,bankBalanceMg)/(Math.max(1,sumSavingsMg))*100)+'%"></div></div><span class="mg-bar-value">'+fmt(bankBalanceMg)+'</span></div></div></div></div>';
 
-h+='<div class="dot-divider"><span class="diamond"></span><span>لیست اعضای دارای موجودی حساب</span></div>';
+h+='<div id="report-member-list" class="dot-divider"><span class="diamond"></span><span>'+ (reportFocus==='active'?'لیست اشخاص دارای بدهی وام':reportFocus==='overdue'?'لیست اشخاص دارای قسط معوق':'لیست اعضای دارای موجودی حساب') +'</span></div>';
 h+='<div class="book-panel"><div class="book-wrap"><table><thead><tr>'+
 '<th>نام عضو</th><th>مانده سپرده</th><th>مانده بدهی وام</th><th>تاریخ دریافت وام</th><th>تعداد کل اقساط</th><th>تاریخ پایان وام</th><th>اقساط معوق</th><th>مبلغ معوقی</th><th>نزدیک‌ترین سررسید قسط</th>'+
 '</tr></thead><tbody>';
 let prevGroup=null;
-withBal.forEach(m=>{
+reportMembers.forEach(m=>{
 const l=getLoan(m.member_id);const st=getMemberStats(m.member_id);const due=memberDueInfo(m.member_id);
 const hasLoan=l&&l.loan_id;
 const endDate=hasLoan?toFa(addJalaliMonths(l.start_date,l.installments)):'—';
@@ -1453,7 +1468,7 @@ const sorted=od.slice().sort((a,b)=>a.due_date.localeCompare(b.due_date));
 overdueList.push({member_id:l.member_id,name:m?m.name:'—',count:od.length,amt:od.reduce((s,p)=>s+p.amount,0),first:sorted[0].due_date});}});
 overdueList.sort((a,b)=>a.first.localeCompare(b.first));
 
-h+='<div class="dot-divider"><span class="diamond"></span><span>اعضای دارای قسط معوق</span></div>';
+h+='<div id="report-overdue-list" class="dot-divider"><span class="diamond"></span><span>اعضای دارای قسط معوق</span></div>';
 if(overdueList.length){
 h+='<div class="book-panel"><div class="book-wrap"><table><thead><tr><th>نام عضو</th><th>تعداد قسط معوق</th><th>مبلغ معوقی</th><th>تاریخ اولین قسط معوق</th></tr></thead><tbody>';
 overdueList.forEach(o=>{h+='<tr data-clickable onclick="navigateTo(showInstallmentBookOnly,['+o.member_id+'])"><td>'+o.name+'</td><td>'+o.count.toLocaleString('fa-IR')+'</td><td>'+fmt(o.amt)+'</td><td>'+toFa(o.first)+'</td></tr>';});
@@ -1469,7 +1484,7 @@ const sum1=sumSavings+profitReserve+income;
 const sum2=sumOutstanding+expense;
 const bankBalance=sum1-sum2;
 
-h+='<div class="dot-divider"><span class="diamond"></span><span>ترازنامه صندوق</span></div>'+
+h+='<div id="report-bank-balance" class="dot-divider"><span class="diamond"></span><span>ترازنامه صندوق</span></div>'+
 '<div class="led-rows">'+
 '<div class="led-row"><span class="rl">جمع موجودی حساب اعضا</span><span class="rv">'+fmt(sumSavings)+' ریال</span></div>'+
 '<div class="led-row"><span class="rl">ذخیره سود</span><span class="rv">'+fmt(profitReserve)+' ریال</span></div>'+
