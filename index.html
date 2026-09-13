@@ -896,7 +896,9 @@ document.getElementById('gateError').style.display='block';
 return;
 }
 setStoredToken(res.token,r);
-return apiCall({action:'getData',token:res.token}).then(function(dres){
+ // هر ورود باید انتخاب متقاضی قبلی را پاک کند تا اطلاعات کاربر قبلی/صندوق‌دار نمایش داده نشود.
+ loanRequestTargetId=null;
+ return apiCall({action:'getData',token:res.token}).then(function(dres){
 if(btn){btn.disabled=false;btn.innerHTML=prevLabel;}
 if(!dres||!dres.success){
 document.getElementById('gateError').innerHTML='خطا در دریافت اطلاعات. دوباره تلاش کنید';
@@ -936,6 +938,7 @@ function saveCredentialToBrowser(username, password){
 }
 
 function logout(){
+loanRequestTargetId=null;
 const tok=getStoredToken();
 if(tok)apiCall({action:'logout',token:tok}).catch(function(){});
 clearStoredToken();
@@ -1145,7 +1148,13 @@ h+=`<div class="site-footer">${footerHtml()}</div>`;
 document.getElementById('canvas').innerHTML=h;}
 
 let loanRequestTargetId=null;
-function loanRequestMember(){return D.members.find(m=>Number(m.member_id)===Number(loanRequestTargetId||U.member_id))||{};}
+function loanRequestMember(){
+ const wanted=Number(loanRequestTargetId||U?.member_id||0);
+ const found=D.members.find(m=>Number(m.member_id)===wanted);
+ if(found)return found;
+ loanRequestTargetId=Number(U?.member_id||0);
+ return D.members.find(m=>Number(m.member_id)===Number(U?.member_id||0))||{};
+}
 function navigateLoanTarget(){loanRequestTargetId=Number(document.getElementById('lr_target_member')?.value)||Number(U.member_id);showLoanRequest();}
 function refreshAfterProfileSave(){if(typeof silentReload==='function')silentReload();if(typeof showLoanRequest==='function'&&currentView&&currentView.fn===showLoanRequest)setTimeout(showLoanRequest,100);}
 function showLoanRequest(){
